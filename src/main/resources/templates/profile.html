@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:text="${profileUser.username} + ' - Profile'">User Profile</title>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<style>
+	    body { 
+	        font-family: Arial, sans-serif; 
+	        margin: 0; 
+	        padding: 0; 
+	        background: #f5f5f5; 
+	    }
+	    
+	    header {
+	        background: #007bff;
+	        color: white;
+	        padding: 15px 20px;
+	        display: flex;
+	        justify-content: space-between;
+	        align-items: center;
+	    }
+	    
+	    header h1 { 
+	        margin: 0;
+	        font-size: 1.5em;
+	    }
+	    
+	    .logout-btn {
+	        background: white;
+	        color: #007bff;
+	        border: none;
+	        padding: 8px 15px;
+	        border-radius: 5px;
+	        cursor: pointer;
+	        text-decoration: none;
+	        font-size: 14px;
+	    }
+	    
+	    .container {
+	        max-width: 1000px;
+	        margin: 30px auto;
+	        padding: 0 20px;
+	    }
+	    
+	    .profile-card {
+	        background: white;
+	        border-radius: 8px;
+	        padding: 30px;
+	        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+	        margin-bottom: 30px;
+	    }
+	    
+	    .profile-header {
+	        display: flex;
+	        align-items: center;
+	        gap: 30px;
+	        margin-bottom: 30px;
+	        padding-bottom: 20px;
+	        border-bottom: 2px solid #f0f0f0;
+	    }
+	    
+		.avatar {
+		    width: 120px;
+		    height: 150px;  /* Changed from 120px to 150px */
+		    border-radius: 8px;
+		    background: #007bff;
+		    display: flex;
+		    align-items: center;
+		    justify-content: center;
+		    font-size: 48px;
+		    color: white;
+		    font-weight: bold;
+		    flex-shrink: 0;
+		}
+		
+		.pro-badge {
+		    display: inline-block;
+		    background: linear-gradient(135deg, #FFD700, #FFA500);
+		    color: #000;
+		    font-weight: bold;
+		    font-size: 12px;
+		    padding: 3px 8px;
+		    border-radius: 3px;
+		    margin-left: 8px;
+		    vertical-align: middle;
+		    letter-spacing: 0.5px;
+		    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+		}
+	    
+	    .profile-info {
+	        flex: 1;
+	        min-width: 0;
+	    }
+	    
+	    .profile-info h2 {
+	        margin: 0 0 10px 0;
+	        word-wrap: break-word;
+	    }
+	    
+	    .rep-points {
+	        color: #007bff;
+	        font-weight: bold;
+	        font-size: 18px;
+	    }
+	    
+	    .bio {
+	        background: #f9f9f9;
+	        padding: 15px;
+	        border-radius: 5px;
+	        margin: 20px 0;
+	        font-style: italic;
+	        word-wrap: break-word;
+	    }
+	    
+	    .profile-details {
+	        display: grid;
+	        grid-template-columns: 150px 1fr;
+	        gap: 10px;
+	        margin: 20px 0;
+	        word-wrap: break-word;
+	    }
+	    
+	    .profile-details strong {
+	        color: #666;
+	    }
+	    
+		.social-links a {
+		    display: inline-block;
+		    margin-right: 15px;
+		    margin-bottom: 10px;
+		    text-decoration: none;
+		    font-weight: 500;
+		    transition: opacity 0.2s;
+		}
+
+		.social-links a:hover {
+		    opacity: 0.8;
+		    text-decoration: none;
+		}
+
+		.social-links a i {
+		    font-size: 20px;
+		    margin-right: 5px;
+		}
+	    
+	    .edit-btn {
+	        background: #007bff;
+	        color: white;
+	        border: none;
+	        padding: 12px 20px;
+	        border-radius: 5px;
+	        cursor: pointer;
+	        text-decoration: none;
+	        display: inline-block;
+	        min-height: 44px;
+	    }
+	    
+	    .section {
+	        background: white;
+	        border-radius: 8px;
+	        padding: 20px;
+	        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+	        margin-bottom: 20px;
+	    }
+	    
+	    .post-item, .comment-item {
+	        padding: 15px;
+	        border-bottom: 1px solid #eee;
+	        word-wrap: break-word;
+	    }
+	    
+	    .post-item:last-child, .comment-item:last-child {
+	        border-bottom: none;
+	    }
+	    
+	    .post-title {
+	        font-weight: bold;
+	        color: #007bff;
+	        text-decoration: none;
+	        word-wrap: break-word;
+	    }
+	    
+	    .post-title:hover {
+	        text-decoration: underline;
+	    }
+	    
+	    .category-badge {
+	        display: inline-block;
+	        background: #007bff;
+	        color: white;
+	        padding: 3px 10px;
+	        border-radius: 3px;
+	        font-size: 12px;
+	        margin-left: 10px;
+	    }
+	    
+	    .timestamp {
+	        color: #999;
+	        font-size: 14px;
+	        word-wrap: break-word;
+	    }
+	    
+	    /* Mobile Responsive */
+	    @media (max-width: 768px) {
+	        .container {
+	            margin: 15px auto;
+	            padding: 0 10px;
+	        }
+	        
+	        .profile-card {
+	            padding: 15px;
+	        }
+	        
+	        .profile-header {
+	            flex-direction: column;
+	            text-align: center;
+	            gap: 15px;
+	        }
+	        
+			.avatar {
+			    width: 80px;
+			    height: 100px;  /* Changed from 80px to 100px */
+			    font-size: 36px;
+			}
+	        }
+	        
+	        .profile-info h2 {
+	            font-size: 1.3em;
+	        }
+	        
+	        .rep-points {
+	            font-size: 16px;
+	        }
+	        
+	        .profile-details {
+	            grid-template-columns: 100px 1fr;
+	            gap: 8px;
+	            font-size: 14px;
+	        }
+	        
+	        .bio {
+	            padding: 12px;
+	            font-size: 14px;
+	        }
+	        
+	        .edit-btn {
+	            width: 100%;
+	            text-align: center;
+	        }
+	        
+	        .section {
+	            padding: 15px;
+	        }
+	        
+	        .section h3 {
+	            font-size: 1.2em;
+	        }
+	        
+	        header h1 {
+	            font-size: 1.2em;
+	        }
+	        
+	        .logout-btn {
+	            padding: 6px 12px;
+	            font-size: 13px;
+	        }
+	    }
+	</style>
+</head>
+<body>
+    <header>
+        <h1>NattyPro.Life Forum</h1>
+        <a href="/" class="logout-btn">Back to Forum</a>
+    </header>
+    
+    <div class="container">
+        <div class="profile-card">
+            <div class="profile-header">
+				<div class="avatar" th:if="${profileUser.avatarUrl == null || profileUser.avatarUrl == '/images/default-avatar.png'}" 
+				     th:text="${profileUser.username.substring(0,1).toUpperCase()}">U</div>
+					 <img th:if="${profileUser.avatarUrl != null && profileUser.avatarUrl != '/images/default-avatar.png'}" 
+					      th:src="${profileUser.avatarUrl}" 
+					      alt="Profile Picture"
+					      style="width: 120px; height: 150px; border-radius: 8px; object-fit: cover;">
+                <div class="profile-info">
+                 <h2> 
+					<span th:text="${profileUser.username}">Username</span>
+					<span class="pro-badge" th:if="${profileUser.username == 'DanielSolis'}">PRO</span>
+				</h2>
+                    <div class="rep-points">
+                        🏆 <span th:text="${profileUser.repPoints}">0</span> Rep Points
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Bio -->
+            <div class="bio" th:if="${profileUser.bio != null && !profileUser.bio.isEmpty()}">
+                <p th:text="${profileUser.bio}">User bio goes here...</p>
+            </div>
+            <div class="bio" th:if="${profileUser.bio == null || profileUser.bio.isEmpty()}">
+                <p style="color: #999;">No bio yet.</p>
+            </div>
+            
+            <!-- Profile Details -->
+            <div class="profile-details">
+				<strong>Age:</strong>
+				<span th:if="${profileUser.showAge != null && profileUser.showAge && profileUser.age != null}" th:text="${profileUser.age}">25</span>
+				<span th:if="${profileUser.showAge == null || !profileUser.showAge || profileUser.age == null}">Hidden</span>
+
+				<strong>Email:</strong>
+				<span th:if="${profileUser.showEmail != null && profileUser.showEmail}" th:text="${profileUser.email}">email@example.com</span>
+				<span th:if="${profileUser.showEmail == null || !profileUser.showEmail}">Hidden</span>
+                
+                <strong>Posts Created:</strong>
+                <span th:text="${userPosts.size()}">0</span>
+                
+                <strong>Comments Made:</strong>
+                <span th:text="${userComments.size()}">0</span>
+            </div>
+            
+			<!-- Social Links -->
+			<div class="social-links" th:if="${profileUser.instagramHandle != null || profileUser.twitterHandle != null || profileUser.youtubeHandle != null}">
+			    <strong>Connect:</strong><br/>
+			    <a th:if="${profileUser.instagramHandle != null}" 
+			       th:href="'https://instagram.com/' + ${profileUser.instagramHandle}" 
+			       target="_blank"
+			       style="color: #E4405F;">
+			        <i class="fab fa-instagram"></i> Instagram
+			    </a>
+			    <a th:if="${profileUser.twitterHandle != null}" 
+			       th:href="'https://twitter.com/' + ${profileUser.twitterHandle}" 
+			       target="_blank"
+			       style="color: #1DA1F2;">
+			        <i class="fab fa-twitter"></i> Twitter
+			    </a>
+			    <a th:if="${profileUser.youtubeHandle != null}" 
+			       th:href="'https://youtube.com/@' + ${profileUser.youtubeHandle}" 
+			       target="_blank"
+			       style="color: #FF0000;">
+			        <i class="fab fa-youtube"></i> YouTube
+			    </a>
+			</div>
+            
+            <!-- Edit Button (only show for own profile) -->
+            <div style="margin-top: 20px;" th:if="${isOwnProfile}">
+                <a href="/profile/edit" class="edit-btn">Edit Profile</a>
+            </div>
+        </div>
+        
+        <!-- User's Posts -->
+        <div class="section">
+            <h3>Posts Created (<span th:text="${userPosts.size()}">0</span>)</h3>
+            <div th:if="${userPosts.isEmpty()}">
+                <p style="color: #999;">No posts yet.</p>
+            </div>
+            <div class="post-item" th:each="post : ${userPosts}">
+                <a th:href="@{/post/{id}(id=${post.id})}" class="post-title" th:text="${post.title}">Post Title</a>
+                <span class="category-badge" th:text="${post.category}">Category</span>
+                <div class="timestamp" th:text="${post.createdAt}">2025-01-01</div>
+            </div>
+        </div>
+        
+        <!-- User's Comments -->
+        <div class="section">
+            <h3>Recent Comments (<span th:text="${userComments.size()}">0</span>)</h3>
+            <div th:if="${userComments.isEmpty()}">
+                <p style="color: #999;">No comments yet.</p>
+            </div>
+            <div class="comment-item" th:each="comment : ${userComments}">
+                <p th:text="${comment.content}">Comment text...</p>
+                <div class="timestamp" th:text="${comment.createdAt}">2025-01-01</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
