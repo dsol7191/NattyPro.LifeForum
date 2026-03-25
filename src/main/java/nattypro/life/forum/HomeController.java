@@ -1,6 +1,7 @@
 package nattypro.life.forum;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import java.util.stream.Collectors;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.util.List;
 import org.springframework.web.bind.annotation.PathVariable;
 import java.util.Arrays;
+import java.time.LocalDateTime;
 
 @Controller
 public class HomeController {
@@ -134,19 +136,25 @@ public class HomeController {
     }
 
     @GetMapping("/post/{id}")
-    public String viewPost(@PathVariable Long id, Model model) {
+    public String viewPost(@PathVariable Long id, Model model, Authentication authentication) {
         Post post = postRepository.findById(id).orElse(null);
-        
+
         if (post == null) {
             return "redirect:/";
         }
-        
+
         List<Comment> comments = commentRepository.findByPostIdOrderByCreatedAtAsc(id);
-        
+
         model.addAttribute("post", post);
         model.addAttribute("comments", comments);
         model.addAttribute("newComment", new Comment());
         
+        // Current user for profile links and PRO badge
+        if (authentication != null) {
+            User currentUser = userRepository.findByUsername(authentication.getName()).orElse(null);
+            model.addAttribute("currentUser", currentUser);
+        }
+
         return "post";
     }
 
@@ -156,8 +164,8 @@ public class HomeController {
         comment.setContent(content);
         comment.setPostId(id);
         comment.setAuthor(authentication.getName());
+        comment.setCreatedAt(LocalDateTime.now());  // ← Add this line
         commentRepository.save(comment);
         return "redirect:/post/" + id;
-    
     }
 }
