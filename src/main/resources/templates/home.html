@@ -223,7 +223,9 @@
 <body>
 	<div style="background: #007bff; color: white; padding: 15px 20px; margin-bottom: 20px;">
 	    <div class="header-container" style="max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center;">
-	        <h2 style="margin: 0; color: white;">NattyPro.Life</h2>
+			<a href="/" style="text-decoration: none;">
+			    <h2 style="margin: 0; color: white;">NattyPro.Life</h2>
+			</a>
 			<div th:if="${#authorization.expression('isAuthenticated()')}">
 			    <div style="display: flex; align-items: center; gap: 15px;">
 			        <div>
@@ -254,7 +256,8 @@
 	</div>
     <div class="container">
         <div class="main-content">
-        <h1>Welcome to The NattyPro.Life Forum!</h1>
+			<h1 th:if="${selectedCategory == 'All'}">Welcome to The NattyPro.Life Forum!</h1>
+			<h1 th:if="${selectedCategory != 'All'}" th:text="${selectedCategory}">Category Name</h1>
             
             <div class="create-form">
                 <h2>Start a Discussion:</h2>
@@ -310,44 +313,44 @@
 		    </a>
 		    
 		    <a href="/?category=Training" class="category-link" th:classappend="${selectedCategory == 'Training'} ? 'active' : ''">
-		        Training
+		        💪 Training
 		        <span class="category-count" th:text="${trainingCount}">0</span>
 		    </a>
 		    
 		    <a href="/?category=Nutrition" class="category-link" th:classappend="${selectedCategory == 'Nutrition'} ? 'active' : ''">
-		        Nutrition
+		        🍎 Nutrition
 		        <span class="category-count" th:text="${nutritionCount}">0</span>
 		    </a>
 		    
 		    <a href="/?category=Recovery" class="category-link" th:classappend="${selectedCategory == 'Recovery'} ? 'active' : ''">
-		        Recovery
+		        😴 Recovery
 		        <span class="category-count" th:text="${recoveryCount}">0</span>
 		    </a>
 		    
 		    <a href="/?category=Mindset" class="category-link" th:classappend="${selectedCategory == 'Mindset'} ? 'active' : ''">
-		        Mindset
+		        🧠 Mindset
 		        <span class="category-count" th:text="${mindsetCount}">0</span>
 		    </a>
 		    
 		    <a href="/?category=Prep Files" class="category-link" th:classappend="${selectedCategory == 'Prep Files'} ? 'active' : ''">
-		        Prep Files
+		        📁 Prep Files
 		        <span class="category-count" th:text="${prepFilesCount}">0</span>
 		    </a>
 		    
 		    <a href="/?category=Coaches Corner" class="category-link" th:classappend="${selectedCategory == 'Coaches Corner'} ? 'active' : ''">
-		        Coaches Corner
+		        🎓 Coaches Corner
 		        <span class="category-count" th:text="${coachesCornerCount}">0</span>
 		    </a>
 		    
 		    <a href="/?category=Self Promotion" class="category-link" th:classappend="${selectedCategory == 'Self Promotion'} ? 'active' : ''">
-		        Self Promotion
+		        📣 Self Promotion
 		        <span class="category-count" th:text="${selfPromotionCount}">0</span>
 		    </a>
 		    
 		    <a href="/?category=Random Side Quests" class="category-link" th:classappend="${selectedCategory == 'Random Side Quests'} ? 'active' : ''">
-		        Random Side Quests
+		        🎲 Random Side Quests
 		        <span class="category-count" th:text="${randomSideQuestsCount}">0</span>
 		    </a>    
-    </div>
+		</div>
 </body>
 </html>
