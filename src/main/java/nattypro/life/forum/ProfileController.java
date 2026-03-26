@@ -1,12 +1,5 @@
 package nattypro.life.forum;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -16,6 +9,16 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
+
 @Controller
 public class ProfileController {
     @Autowired
@@ -24,6 +27,8 @@ public class ProfileController {
     private PostRepository postRepository;
     @Autowired
     private CommentRepository commentRepository;
+    @Autowired
+    private PostVoteRepository postVoteRepo;
     
     // Directory for avatar uploads
     private final String UPLOAD_DIR = "uploads/avatars/";
@@ -41,6 +46,9 @@ public class ProfileController {
             .filter(c -> c.getAuthor().equals(username))
             .collect(Collectors.toList());
         
+        long reputation = postVoteRepo.countByPostIn(userPosts);
+       
+        model.addAttribute("reputation", reputation);
         model.addAttribute("profileUser", user);
         model.addAttribute("userPosts", userPosts);
         model.addAttribute("userComments", userComments);

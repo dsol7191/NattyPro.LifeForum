@@ -194,6 +194,19 @@
 	        font-size: 12px;
 	        margin-left: 10px;
 	    }
+		.upvote-btn {
+		    background: none;
+		    border: 1px solid #555;
+		    border-radius: 6px;
+		    padding: 4px 12px;
+		    cursor: pointer;
+		    color: inherit;
+		    transition: all 0.2s;
+		}
+		.upvote-btn.voted {
+		    border-color: gold;
+		    color: gold;
+		}
 	    
 	    .timestamp {
 	        color: #999;
@@ -285,6 +298,7 @@
 					      style="width: 120px; height: 150px; border-radius: 8px; object-fit: cover;">
                 <div class="profile-info">
                  <h2> 
+					<span>⭐ Reputation: <strong th:text="${reputation}">0</strong></span>
 					<span th:text="${profileUser.username}">Username</span>
 					<span class="pro-badge" th:if="${profileUser.username == 'DanielSolis'}">PRO</span>
 				</h2>

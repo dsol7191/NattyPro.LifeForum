@@ -243,6 +243,20 @@
                 <span th:if="${post.createdAt}" th:text="' • ' + ${#temporals.format(post.createdAt, 'MMM dd, yyyy hh:mm a')}"></span>
             </p>
         </div>
+		
+		<div class="vote-section" th:if="${currentUser != null}">
+		    <button class="upvote-btn"
+		            th:classappend="${hasVoted} ? 'voted' : ''"
+		            th:data-post-id="${post.id}"
+		            onclick="toggleVote(this)">
+		        👍 <span class="vote-count" th:text="${post.voteCount}">0</span>
+		    </button>
+		</div>
+
+		<!-- Show count only if not logged in -->
+		<div th:unless="${currentUser != null}">
+		    👍 <span th:text="${post.voteCount}">0</span>
+		</div>
         
         <div class="comments-section">
             <h2>Comments (<span th:text="${#lists.size(comments)}">0</span>)</h2>
@@ -271,5 +285,22 @@
             </div>
         </div>
     </div>
+	function toggleVote(btn) {
+	    const postId = btn.dataset.postId;
+
+	    fetch(`/vote/post/${postId}`, {
+	        method: 'POST',
+	        headers: {
+	            'X-CSRF-Token': document.querySelector('meta[name="_csrf"]').content,
+	            'Content-Type': 'application/json'
+	        }
+	    })
+	    .then(res => res.json())
+	    .then(data => {
+	        btn.querySelector('.vote-count').textContent = data.voteCount;
+	        btn.classList.toggle('voted', data.voted);
+	    });
+	}
 </body>
 </html>
+
