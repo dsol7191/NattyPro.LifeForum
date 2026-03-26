@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>NattyPro.Life</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<style>
+	    body { 
+	        font-family: Arial, sans-serif; 
+	        margin: 0; 
+	        padding: 0; 
+	        background: #f5f5f5; 
+	    }
+	    
+	    .container { 
+	        display: flex; 
+	        max-width: 1200px; 
+	        margin: 20px auto; 
+	        gap: 20px; 
+	        padding: 0 20px; 
+	    }
+	    
+	    .main-content { 
+	        flex: 1; 
+	        min-width: 0; /* Prevents flex item overflow */
+	    }
+	    
+	    .sidebar { 
+	        width: 250px; 
+	        background: white; 
+	        padding: 20px; 
+	        border-radius: 5px; 
+	        border: 1px solid #ddd; 
+	        height: fit-content; 
+	    }
+	    
+	    .sidebar h3 { 
+	        margin-top: 0; 
+	        color: #333; 
+	    }
+	    
+	    .category-link { 
+	        display: block; 
+	        padding: 10px; 
+	        margin: 5px 0; 
+	        background: #f9f9f9; 
+	        border-radius: 3px; 
+	        text-decoration: none; 
+	        color: #333; 
+	        border-left: 3px solid #007bff; 
+	    }
+	    
+	    .category-link:hover { 
+	        background: #e8f4f8; 
+	    }
+	    
+	    .category-link.active { 
+	        background: #007bff; 
+	        color: white; 
+	    }
+	    
+	    .category-count { 
+	        float: right; 
+	        color: #666; 
+	        font-size: 12px; 
+	    }
+	    
+	    .post { 
+	        border: 1px solid #ccc; 
+	        padding: 20px; 
+	        margin: 20px 0; 
+	        border-radius: 5px; 
+	        background: white; 
+	        word-wrap: break-word;
+	    }
+	    
+	    .post h2 { 
+	        margin-top: 0; 
+	        color: #333;
+	        font-size: 1.5em;
+	    }
+	    
+	    .author { 
+	        color: #666; 
+	        font-size: 14px; 
+	    }
+	    
+	    .category-badge { 
+	        display: inline-block; 
+	        background: #007bff; 
+	        color: white; 
+	        padding: 5px 10px; 
+	        border-radius: 3px; 
+	        font-size: 12px; 
+	        margin-bottom: 10px; 
+	    }
+		
+		.pro-badge {
+		    display: inline-block;
+		    background: linear-gradient(135deg, #FFD700, #FFA500);
+		    color: #000;
+		    font-weight: bold;
+		    font-size: 10px;
+		    padding: 2px 6px;
+		    border-radius: 3px;
+		    margin-left: 5px;
+		    vertical-align: middle;
+		    letter-spacing: 0.5px;
+		    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+		}
+	    
+	    .create-form { 
+	        background: white; 
+	        padding: 20px; 
+	        border-radius: 5px; 
+	        margin-bottom: 30px; 
+	        border: 1px solid #ddd; 
+	    }
+	    
+	    input, textarea, select { 
+	        width: 100%; 
+	        padding: 10px; 
+	        margin: 10px 0; 
+	        box-sizing: border-box; 
+	        border: 1px solid #ddd; 
+	        border-radius: 3px;
+	        font-size: 16px; /* Prevents iOS zoom on input */
+	    }
+	    
+	    button { 
+	        background: #007bff; 
+	        color: white; 
+	        padding: 12px 20px; 
+	        border: none; 
+	        border-radius: 5px; 
+	        cursor: pointer;
+	        font-size: 16px;
+	        min-height: 44px; /* Touch-friendly */
+	    }
+	    
+	    button:hover { 
+	        background: #0056b3; 
+	    }
+	    
+	    h1 { 
+	        background: white; 
+	        padding: 20px; 
+	        margin: 0 0 20px 0; 
+	        border-radius: 5px; 
+	        border: 1px solid #ddd;
+	        font-size: 1.8em;
+	    }
+	    
+	    h2 {
+	        font-size: 1.3em;
+	    }
+	    
+	    /* Mobile Responsive Styles */
+	    @media (max-width: 768px) {
+	        .container {
+	            flex-direction: column;
+	            padding: 0 10px;
+	            margin: 10px auto;
+	            gap: 10px;
+	        }
+	        
+	        .sidebar {
+	            width: 100%;
+	            order: 2; /* Sidebar goes below content on mobile */
+	            margin-top: 20px;
+	        }
+	        
+	        .main-content {
+	            order: 1;
+	        }
+	        
+	        .post {
+	            padding: 15px;
+	            margin: 10px 0;
+	        }
+	        
+	        .post h2 {
+	            font-size: 1.3em;
+	        }
+	        
+	        h1 {
+	            padding: 15px;
+	            font-size: 1.5em;
+	        }
+	        
+	        .create-form {
+	            padding: 15px;
+	        }
+	        
+	        .author {
+	            font-size: 13px;
+	        }
+	        
+	        button {
+	            width: 100%;
+	            padding: 15px;
+	        }
+	        
+	        /* Make header more compact on mobile */
+	        .header-container {
+	            flex-direction: column;
+	            gap: 10px;
+	            text-align: center;
+	        }
+	    }
+	    
+	    /* Tablet Responsive */
+	    @media (min-width: 769px) and (max-width: 1024px) {
+	        .sidebar {
+	            width: 200px;
+	        }
+	        
+	        .container {
+	            padding: 0 15px;
+	        }
+	    }
+	</style>
+</head>
+<body>
+	<div style="background: #007bff; color: white; padding: 15px 20px; margin-bottom: 20px;">
+	    <div class="header-container" style="max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center;">
+			<a href="/" style="text-decoration: none;">
+			    <h2 style="margin: 0; color: white;">NattyPro.Life</h2>
+			</a>
+			<div th:if="${#authorization.expression('isAuthenticated()')}">
+			    <div style="display: flex; align-items: center; gap: 15px;">
+			        <div>
+			            <span>Welcome, </span>
+			            <a th:href="@{/profile/{username}(username=${#authentication.name})}" 
+			               style="color: white; text-decoration: underline;">
+			                <span th:text="${#authentication.name}">User</span>
+			            </a>
+			            <br/>
+			            <small style="opacity: 0.9;">
+			                <span th:text="${rankEmoji}">🌱</span>
+			                <span th:text="${userRank}">Member</span> • 
+			                <span th:text="${userPostCount}">0</span> posts
+			            </small>
+			        </div>
+			        <span style="color: rgba(255,255,255,0.5);">|</span>
+			        <a th:href="@{/profile/{username}(username=${#authentication.name})}" 
+			           style="color: white; text-decoration: none; background: rgba(255,255,255,0.2); padding: 5px 10px; border-radius: 3px;">
+			            My Profile
+			        </a>
+			        <span style="color: rgba(255,255,255,0.5);">|</span>
+			        <form th:action="@{/logout}" method="post" style="display: inline;">
+			            <button type="submit" style="background: none; border: none; color: white; cursor: pointer; text-decoration: underline; font-size: inherit;">Logout</button>
+			        </form>
+			    </div>
+			</div>
+	    </div>
+	</div>
+    <div class="container">
+        <div class="main-content">
+			<h1 th:if="${selectedCategory == 'All'}">Welcome to The NattyPro.Life Forum!</h1>
+			<h1 th:if="${selectedCategory != 'All'}" th:text="${selectedCategory}">Category Name</h1>
+            
+            <div class="create-form">
+                <h2>Start a Discussion:</h2>
+                <form th:action="@{/create}" th:object="${newPost}" method="post">
+                    <input type="text" th:field="*{title}" placeholder="Post Title" required />
+                    
+					<select th:field="*{category}" required>
+					    <option value="">Select a category...</option>
+					    <option th:each="cat : ${categories}" th:value="${cat}" th:text="${cat}"></option>
+					</select>
+                    
+                    <textarea th:field="*{content}" rows="4" placeholder="Post Content" required></textarea>
+                 
+                    <button type="submit">Post</button>
+                </form>
+            </div>
+            
+            <h2>Recent Posts <span th:if="${selectedCategory != 'All'}" th:text="'in ' + ${selectedCategory}"></span></h2>
+            
+			<div th:each="post : ${posts}" class="post">
+			    <span class="category-badge" th:text="${post.category}">Category</span>
+			    <h2><a th:href="@{/post/{id}(id=${post.id})}" th:text="${post.title}" style="color: #333; text-decoration: none;">Post Title</a></h2>
+			    <p class="post-content" th:text="${post.content}" style="white-space: pre-wrap;">Post content goes here</p>
+				<p class="author">
+					Posted by: 
+					<a th:href="@{/profile/{username}(username=${post.author})}" 
+					   style="color: #007bff; text-decoration: none; font-weight: bold;"
+					   th:text="${post.author}">Author</a>
+					<span class="pro-badge" th:if="${post.author == 'DanielSolis'}">PRO</span>
+			        <span th:if="${post.createdAt}" th:text="' • ' + ${#temporals.format(post.createdAt, 'MMM dd, yyyy hh:mm a')}"></span>
+					<span> • <a th:href="@{/post/{id}(id=${post.id})}" style="color: #007bff; text-decoration: none;">View/Comment</a></span>
+					
+					<!-- Delete button - shows if you're the author OR an admin -->
+					<span sec:authorize="isAuthenticated()">
+					    <form th:if="${#authentication.name == post.author} or ${#authorization.expression('hasRole(''ADMIN'')')}" 
+					          th:action="@{/delete/{id}(id=${post.id})}" method="post" style="display: inline; margin-left: 15px;">
+					        <button type="submit" style="background: #dc3545; padding: 5px 10px; font-size: 12px;" 
+					                onclick="return confirm('Are you sure you want to delete this post?');">Delete</button>
+					    </form>
+					</span>
+			    </p>
+			</div>
+            
+            <p th:if="${#lists.isEmpty(posts)}">No posts yet! Be the first to post.</p>
+        </div>
+        
+		<div class="sidebar">
+		    <h3>Forum Categories</h3>
+		    
+		    <a href="/" class="category-link" th:classappend="${selectedCategory == 'All'} ? 'active' : ''">
+		        All Posts
+		        <span class="category-count" th:text="${totalCount}">0</span>
+		    </a>
+		    
+		    <a href="/?category=Training" class="category-link" th:classappend="${selectedCategory == 'Training'} ? 'active' : ''">
+		        💪 Training
+		        <span class="category-count" th:text="${trainingCount}">0</span>
+		    </a>
+		    
+		    <a href="/?category=Nutrition" class="category-link" th:classappend="${selectedCategory == 'Nutrition'} ? 'active' : ''">
+		        🍎 Nutrition
+		        <span class="category-count" th:text="${nutritionCount}">0</span>
+		    </a>
+		    
+		    <a href="/?category=Recovery" class="category-link" th:classappend="${selectedCategory == 'Recovery'} ? 'active' : ''">
+		        😴 Recovery
+		        <span class="category-count" th:text="${recoveryCount}">0</span>
+		    </a>
+		    
+		    <a href="/?category=Mindset" class="category-link" th:classappend="${selectedCategory == 'Mindset'} ? 'active' : ''">
+		        🧠 Mindset
+		        <span class="category-count" th:text="${mindsetCount}">0</span>
+		    </a>
+		    
+		    <a href="/?category=Prep Files" class="category-link" th:classappend="${selectedCategory == 'Prep Files'} ? 'active' : ''">
+		        📁 Prep Files
+		        <span class="category-count" th:text="${prepFilesCount}">0</span>
+		    </a>
+		    
+		    <a href="/?category=Coaches Corner" class="category-link" th:classappend="${selectedCategory == 'Coaches Corner'} ? 'active' : ''">
+		        🎓 Coaches Corner
+		        <span class="category-count" th:text="${coachesCornerCount}">0</span>
+		    </a>
+		    
+		    <a href="/?category=Self Promotion" class="category-link" th:classappend="${selectedCategory == 'Self Promotion'} ? 'active' : ''">
+		        📣 Self Promotion
+		        <span class="category-count" th:text="${selfPromotionCount}">0</span>
+		    </a>
+		    
+		    <a href="/?category=Random Side Quests" class="category-link" th:classappend="${selectedCategory == 'Random Side Quests'} ? 'active' : ''">
+		        🎲 Random Side Quests
+		        <span class="category-count" th:text="${randomSideQuestsCount}">0</span>
+		    </a>    
+		</div>
+</body>
+</html>
