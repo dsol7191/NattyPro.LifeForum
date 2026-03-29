@@ -29,6 +29,8 @@ public class ProfileController {
     private CommentRepository commentRepository;
     @Autowired
     private PostVoteRepository postVoteRepo;
+    @Autowired
+    private ThreadFollowRepository followRepo;
     
     // Directory for avatar uploads
     private final String UPLOAD_DIR = "uploads/avatars/";
@@ -47,7 +49,10 @@ public class ProfileController {
             .collect(Collectors.toList());
         
         long reputation = postVoteRepo.countByPostIn(userPosts);
-       
+        
+        List<ThreadFollow> followedThreads = followRepo.findByUser(user);
+        
+        model.addAttribute("followedThreads", followedThreads);
         model.addAttribute("reputation", reputation);
         model.addAttribute("profileUser", user);
         model.addAttribute("userPosts", userPosts);

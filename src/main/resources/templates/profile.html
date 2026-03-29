@@ -527,6 +527,24 @@
             <span class="timestamp" th:text="${comment.createdAt}">Date</span>
         </div>
     </div>
+	
+	<div class="section">
+	    <div class="section-header">
+	        <h3>Followed Threads</h3>
+	        <span class="count-badge" th:text="${followedThreads != null ? followedThreads.size() : 0}">0</span>
+	    </div>
+	    <div class="empty-state" th:if="${followedThreads == null || followedThreads.isEmpty()}">
+	        No followed threads yet.
+	    </div>
+	    <div class="post-item" th:each="follow : ${followedThreads}">
+	        <a th:href="@{/post/{id}(id=${follow.post.id})}"
+	           class="post-title" th:text="${follow.post.title}">Thread Title</a>
+	        <div class="post-meta">
+	            <span class="category-badge" th:text="${follow.post.category}">Category</span>
+	            <span class="timestamp" th:text="${follow.post.author}">Author</span>
+	        </div>
+	    </div>
+	</div>
 
 </div>
 </body>

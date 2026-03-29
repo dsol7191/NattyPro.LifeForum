@@ -22,17 +22,20 @@ public class HomeController {
     private CommentRepository commentRepository;
     @Autowired
     private UserRepository userRepository;
-    
+    @Autowired
+    private ThreadFollowRepository followRepo;
+    @Autowired
+    private PostVoteRepository postVoteRepo;
     
  // Define all categories in one place
     private static final List<String> CATEGORIES = Arrays.asList(
         "Training",
-        "Nutrtion",
+        "Nutrition",
         "Recovery", 
         "Mindset",
         "Prep Files",
         "Coaches Corner",
-        "Self-Promotion",
+        "Self Promotion",
         "Random Side Quests"
         
     );
@@ -42,14 +45,16 @@ public class HomeController {
         	//Filter Post by category
     	List<Post> posts;
     	// Add current user info for profile links
-    	 if (category != null && !category.isEmpty()) {
-    	        posts = postRepository.findByCategory(category);  // Assigned here
-    	        model.addAttribute("selectedCategory", category);
+    	if (category != null && !category.isEmpty()) {
+    	    posts = postRepository.findByCategory(category);
+    	    model.addAttribute("selectedCategory", category);
+    	} else {
+    	    posts = postRepository.findAll().stream()
+    	        .sorted((a, b) -> b.getCreatedAt().compareTo(a.getCreatedAt()))
+    	        .limit(5)
+    	        .collect(Collectors.toList());
+    	    model.addAttribute("selectedCategory", "All");
     	}
-    	else {
-            posts = postRepository.findAll();
-            model.addAttribute("selectedCategory", "All");
-        }
         
         
         model.addAttribute("posts", posts);
@@ -153,8 +158,24 @@ public class HomeController {
         if (authentication != null) {
             User currentUser = userRepository.findByUsername(authentication.getName()).orElse(null);
             model.addAttribute("currentUser", currentUser);
+            
         }
-
+        if (authentication != null) {
+            User currentUser = userRepository.findByUsername(authentication.getName()).orElse(null);
+            model.addAttribute("currentUser", currentUser);
+            
+            // Add these:
+            if (currentUser != null) {
+                boolean isFollowing = followRepo.existsByUserAndPost(currentUser, post);
+                boolean hasVoted = postVoteRepo.findByUserAndPost(currentUser, post).isPresent();
+                model.addAttribute("isFollowing", isFollowing);
+                model.addAttribute("hasVoted", hasVoted);
+            }
+        } else {
+            model.addAttribute("isFollowing", false);
+            model.addAttribute("hasVoted", false);
+        }
+        
         return "post";
     }
 
