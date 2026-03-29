@@ -49,6 +49,13 @@ public class User {
     @Size(max = 50, message = "YouTube handle too long")
     private String youtubeHandle;
     
+    @Column(name = "twitch_handle", length = 30)
+    @Size(max = 30, message = "Twitch handle too long")
+    private String twitchHandle;
+
+    public String getTwitchHandle() { return twitchHandle; }
+    public void setTwitchHandle(String twitchHandle) { this.twitchHandle = twitchHandle; }
+    
     @Column(name = "rep_points")
     private Integer repPoints = 0;
     

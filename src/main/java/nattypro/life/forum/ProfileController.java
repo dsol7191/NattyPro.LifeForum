@@ -51,7 +51,7 @@ public class ProfileController {
         model.addAttribute("reputation", reputation);
         model.addAttribute("profileUser", user);
         model.addAttribute("userPosts", userPosts);
-        model.addAttribute("userComments", userComments);
+        model.addAttribute("usferComments", userComments);
         
         if (authentication != null) {
             model.addAttribute("isOwnProfile", authentication.getName().equals(username));
@@ -77,6 +77,7 @@ public class ProfileController {
         @RequestParam(required = false) String instagramHandle,
         @RequestParam(required = false) String twitterHandle,
         @RequestParam(required = false) String youtubeHandle,
+        @RequestParam(required = false) String twitchHandle,
         @RequestParam(required = false, defaultValue = "false") Boolean showEmail,
         @RequestParam(required = false, defaultValue = "true") Boolean showAge,
         @RequestParam(required = false) MultipartFile avatarFile,
@@ -109,6 +110,7 @@ public class ProfileController {
         user.setInstagramHandle(instagramHandle);
         user.setTwitterHandle(twitterHandle);
         user.setYoutubeHandle(youtubeHandle);
+        user.setTwitchHandle(twitchHandle);
         
         // Set privacy settings
         user.setShowEmail(showEmail);
@@ -150,7 +152,8 @@ public class ProfileController {
         }
         
         userRepository.save(user);
-        return "redirect:/profile/" + authentication.getName();
+      
+        return "redirect:/profile/" + authentication.getName() + "?updated=true";
 
   
     }

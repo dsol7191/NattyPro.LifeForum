@@ -31,8 +31,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 	        User user = userRepo.findByUsername(principal.getName()).orElseThrow();
 	        Post post = postRepo.findById(postId).orElseThrow();
 
+	        if (post.getAuthor().equals(user.getUsername())) {
+	            return ResponseEntity.badRequest().body(Map.of("error", "Can't upvote your own post"));
+	        
+	        }
 	        Optional<PostVote> existing = postVoteRepo.findByUserAndPost(user, post);
 
+	        
 	        if (existing.isPresent()) {
 	            postVoteRepo.delete(existing.get());  // toggle OFF
 	        } else {

@@ -2,390 +2,532 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title th:text="${profileUser.username} + ' - Profile'">User Profile</title>
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<style>
-	    body { 
-	        font-family: Arial, sans-serif; 
-	        margin: 0; 
-	        padding: 0; 
-	        background: #f5f5f5; 
-	    }
-	    
-	    header {
-	        background: #007bff;
-	        color: white;
-	        padding: 15px 20px;
-	        display: flex;
-	        justify-content: space-between;
-	        align-items: center;
-	    }
-	    
-	    header h1 { 
-	        margin: 0;
-	        font-size: 1.5em;
-	    }
-	    
-	    .logout-btn {
-	        background: white;
-	        color: #007bff;
-	        border: none;
-	        padding: 8px 15px;
-	        border-radius: 5px;
-	        cursor: pointer;
-	        text-decoration: none;
-	        font-size: 14px;
-	    }
-	    
-	    .container {
-	        max-width: 1000px;
-	        margin: 30px auto;
-	        padding: 0 20px;
-	    }
-	    
-	    .profile-card {
-	        background: white;
-	        border-radius: 8px;
-	        padding: 30px;
-	        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-	        margin-bottom: 30px;
-	    }
-	    
-	    .profile-header {
-	        display: flex;
-	        align-items: center;
-	        gap: 30px;
-	        margin-bottom: 30px;
-	        padding-bottom: 20px;
-	        border-bottom: 2px solid #f0f0f0;
-	    }
-	    
-		.avatar {
-		    width: 120px;
-		    height: 150px;  /* Changed from 120px to 150px */
-		    border-radius: 8px;
-		    background: #007bff;
-		    display: flex;
-		    align-items: center;
-		    justify-content: center;
-		    font-size: 48px;
-		    color: white;
-		    font-weight: bold;
-		    flex-shrink: 0;
-		}
-		
-		.pro-badge {
-		    display: inline-block;
-		    background: linear-gradient(135deg, #FFD700, #FFA500);
-		    color: #000;
-		    font-weight: bold;
-		    font-size: 12px;
-		    padding: 3px 8px;
-		    border-radius: 3px;
-		    margin-left: 8px;
-		    vertical-align: middle;
-		    letter-spacing: 0.5px;
-		    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
-		}
-	    
-	    .profile-info {
-	        flex: 1;
-	        min-width: 0;
-	    }
-	    
-	    .profile-info h2 {
-	        margin: 0 0 10px 0;
-	        word-wrap: break-word;
-	    }
-	    
-	    .rep-points {
-	        color: #007bff;
-	        font-weight: bold;
-	        font-size: 18px;
-	    }
-	    
-	    .bio {
-	        background: #f9f9f9;
-	        padding: 15px;
-	        border-radius: 5px;
-	        margin: 20px 0;
-	        font-style: italic;
-	        word-wrap: break-word;
-	    }
-	    
-	    .profile-details {
-	        display: grid;
-	        grid-template-columns: 150px 1fr;
-	        gap: 10px;
-	        margin: 20px 0;
-	        word-wrap: break-word;
-	    }
-	    
-	    .profile-details strong {
-	        color: #666;
-	    }
-	    
-		.social-links a {
-		    display: inline-block;
-		    margin-right: 15px;
-		    margin-bottom: 10px;
-		    text-decoration: none;
-		    font-weight: 500;
-		    transition: opacity 0.2s;
-		}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@500&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; }
 
-		.social-links a:hover {
-		    opacity: 0.8;
-		    text-decoration: none;
-		}
+        :root {
+            --blue: #0070f3;
+            --blue-light: #e8f1ff;
+            --gold-gradient: linear-gradient(135deg, #FFD700, #FFA500);
+            --text: #1a1a2e;
+            --text-muted: #6b7280;
+            --border: #e5e7eb;
+            --bg: #f4f6fb;
+            --white: #ffffff;
+            --radius: 12px;
+            --shadow: 0 2px 12px rgba(0,0,0,0.07);
+        }
 
-		.social-links a i {
-		    font-size: 20px;
-		    margin-right: 5px;
-		}
-	    
-	    .edit-btn {
-	        background: #007bff;
-	        color: white;
-	        border: none;
-	        padding: 12px 20px;
-	        border-radius: 5px;
-	        cursor: pointer;
-	        text-decoration: none;
-	        display: inline-block;
-	        min-height: 44px;
-	    }
-	    
-	    .section {
-	        background: white;
-	        border-radius: 8px;
-	        padding: 20px;
-	        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-	        margin-bottom: 20px;
-	    }
-	    
-	    .post-item, .comment-item {
-	        padding: 15px;
-	        border-bottom: 1px solid #eee;
-	        word-wrap: break-word;
-	    }
-	    
-	    .post-item:last-child, .comment-item:last-child {
-	        border-bottom: none;
-	    }
-	    
-	    .post-title {
-	        font-weight: bold;
-	        color: #007bff;
-	        text-decoration: none;
-	        word-wrap: break-word;
-	    }
-	    
-	    .post-title:hover {
-	        text-decoration: underline;
-	    }
-	    
-	    .category-badge {
-	        display: inline-block;
-	        background: #007bff;
-	        color: white;
-	        padding: 3px 10px;
-	        border-radius: 3px;
-	        font-size: 12px;
-	        margin-left: 10px;
-	    }
-		.upvote-btn {
-		    background: none;
-		    border: 1px solid #555;
-		    border-radius: 6px;
-		    padding: 4px 12px;
-		    cursor: pointer;
-		    color: inherit;
-		    transition: all 0.2s;
-		}
-		.upvote-btn.voted {
-		    border-color: gold;
-		    color: gold;
-		}
-	    
-	    .timestamp {
-	        color: #999;
-	        font-size: 14px;
-	        word-wrap: break-word;
-	    }
-	    
-	    /* Mobile Responsive */
-	    @media (max-width: 768px) {
-	        .container {
-	            margin: 15px auto;
-	            padding: 0 10px;
-	        }
-	        
-	        .profile-card {
-	            padding: 15px;
-	        }
-	        
-	        .profile-header {
-	            flex-direction: column;
-	            text-align: center;
-	            gap: 15px;
-	        }
-	        
-			.avatar {
-			    width: 80px;
-			    height: 100px;  /* Changed from 80px to 100px */
-			    font-size: 36px;
-			}
-	        }
-	        
-	        .profile-info h2 {
-	            font-size: 1.3em;
-	        }
-	        
-	        .rep-points {
-	            font-size: 16px;
-	        }
-	        
-	        .profile-details {
-	            grid-template-columns: 100px 1fr;
-	            gap: 8px;
-	            font-size: 14px;
-	        }
-	        
-	        .bio {
-	            padding: 12px;
-	            font-size: 14px;
-	        }
-	        
-	        .edit-btn {
-	            width: 100%;
-	            text-align: center;
-	        }
-	        
-	        .section {
-	            padding: 15px;
-	        }
-	        
-	        .section h3 {
-	            font-size: 1.2em;
-	        }
-	        
-	        header h1 {
-	            font-size: 1.2em;
-	        }
-	        
-	        .logout-btn {
-	            padding: 6px 12px;
-	            font-size: 13px;
-	        }
-	    }
-	</style>
+        body {
+            font-family: 'DM Sans', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: var(--bg);
+            color: var(--text);
+        }
+
+        /* Header */
+        header {
+            background: var(--blue);
+            color: white;
+            padding: 14px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 8px rgba(0,112,243,0.3);
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 1.2rem;
+            font-weight: 700;
+            letter-spacing: -0.3px;
+        }
+
+        .back-btn {
+            background: rgba(255,255,255,0.15);
+            color: white;
+            border: 1px solid rgba(255,255,255,0.3);
+            padding: 7px 16px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 500;
+            transition: background 0.2s;
+        }
+
+        .back-btn:hover { background: rgba(255,255,255,0.25); }
+
+        /* Layout */
+        .container {
+            max-width: 860px;
+            margin: 32px auto;
+            padding: 0 20px;
+        }
+
+        /* Profile Card */
+        .profile-card {
+            background: var(--white);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .profile-banner {
+            height: 72px;
+            background: linear-gradient(135deg, #0070f3 0%, #004bb5 100%);
+        }
+
+        .profile-body {
+            padding: 0 28px 28px;
+        }
+
+        /* Avatar Row */
+        .avatar-row {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            margin-top: -40px;
+            margin-bottom: 14px;
+        }
+
+        .avatar {
+            width: 84px;
+            height: 104px;
+            border-radius: 10px;
+            border: 3px solid var(--white);
+            background: var(--blue);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 34px;
+            color: white;
+            font-weight: 700;
+            flex-shrink: 0;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+            overflow: hidden;
+        }
+
+        .avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .edit-btn {
+            background: var(--blue);
+            color: white;
+            border: none;
+            padding: 9px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 14px;
+            font-weight: 600;
+            transition: background 0.2s;
+            margin-bottom: 4px;
+        }
+
+        .edit-btn:hover { background: #005ed4; }
+
+        /* Name + PRO */
+        .profile-name {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 14px;
+        }
+
+        .profile-name h2 {
+            margin: 0;
+            font-size: 1.45rem;
+            font-weight: 700;
+            letter-spacing: -0.4px;
+        }
+
+        .pro-badge {
+            display: inline-block;
+            background: var(--gold-gradient);
+            color: #000;
+            font-weight: 700;
+            font-size: 11px;
+            padding: 3px 9px;
+            border-radius: 4px;
+            letter-spacing: 0.8px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+        }
+
+        /* Stats Row */
+        .stats-row {
+            display: flex;
+            gap: 0;
+            margin-bottom: 20px;
+            background: var(--bg);
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+        }
+
+        .stat-item {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 14px 10px;
+            gap: 3px;
+            border-right: 1px solid var(--border);
+        }
+
+        .stat-item:last-child { border-right: none; }
+
+        .stat-value {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text);
+            font-family: 'DM Mono', monospace;
+        }
+
+        .stat-label {
+            font-size: 11px;
+            color: var(--text-muted);
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            text-align: center;
+        }
+
+        /* Bio */
+        .bio {
+            border-left: 3px solid var(--blue);
+            background: var(--bg);
+            border-radius: 0 8px 8px 0;
+            padding: 12px 16px;
+            margin-bottom: 18px;
+            font-size: 14px;
+            line-height: 1.6;
+            color: var(--text);
+        }
+
+        .bio.empty {
+            border-left-color: var(--border);
+            color: var(--text-muted);
+            font-style: italic;
+        }
+
+        /* Details Grid */
+        .details-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 10px;
+            margin-bottom: 18px;
+        }
+
+        .detail-item {
+            background: var(--bg);
+            border-radius: 8px;
+            padding: 11px 14px;
+        }
+
+        .detail-label {
+            font-size: 11px;
+            color: var(--text-muted);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 3px;
+        }
+
+        .detail-value {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        .detail-value.hidden { color: #9ca3af; font-weight: 400; }
+
+        /* Social Links */
+        .social-section { margin-top: 4px; }
+
+        .social-label {
+            font-size: 11px;
+            color: var(--text-muted);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .social-links a {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            padding: 7px 14px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text);
+            background: var(--white);
+            transition: all 0.2s;
+        }
+
+        .social-links a:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+
+        .social-links a i { font-size: 16px; }
+
+        /* Sections */
+        .section {
+            background: var(--white);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            margin-bottom: 16px;
+            overflow: hidden;
+        }
+
+        .section-header {
+            padding: 15px 20px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .section-header h3 {
+            margin: 0;
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+        }
+
+        .count-badge {
+            background: var(--blue-light);
+            color: var(--blue);
+            font-size: 12px;
+            font-weight: 700;
+            padding: 2px 10px;
+            border-radius: 20px;
+            font-family: 'DM Mono', monospace;
+        }
+
+        .post-item, .comment-item {
+            padding: 14px 20px;
+            border-bottom: 1px solid var(--border);
+            transition: background 0.15s;
+        }
+
+        .post-item:last-child, .comment-item:last-child { border-bottom: none; }
+        .post-item:hover, .comment-item:hover { background: var(--bg); }
+
+        .post-title {
+            font-weight: 600;
+            color: var(--blue);
+            text-decoration: none;
+            font-size: 15px;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .post-title:hover { text-decoration: underline; }
+
+        .post-meta {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .category-badge {
+            display: inline-block;
+            background: var(--blue-light);
+            color: var(--blue);
+            padding: 2px 9px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .timestamp {
+            color: var(--text-muted);
+            font-size: 12px;
+        }
+
+        .empty-state {
+            padding: 28px 20px;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+
+        /* Mobile */
+        @media (max-width: 600px) {
+            .container { margin: 16px auto; padding: 0 12px; }
+            .profile-body { padding: 0 16px 20px; }
+            .avatar { width: 70px; height: 86px; font-size: 28px; }
+            .profile-name h2 { font-size: 1.2rem; }
+            .stat-value { font-size: 1.05rem; }
+            .details-grid { grid-template-columns: 1fr 1fr; }
+            .social-links a span { display: none; }
+        }
+    </style>
 </head>
 <body>
-    <header>
-        <h1>NattyPro.Life Forum</h1>
-        <a href="/" class="logout-btn">Back to Forum</a>
-    </header>
-    
-    <div class="container">
-        <div class="profile-card">
-            <div class="profile-header">
-				<div class="avatar" th:if="${profileUser.avatarUrl == null || profileUser.avatarUrl == '/images/default-avatar.png'}" 
-				     th:text="${profileUser.username.substring(0,1).toUpperCase()}">U</div>
-					 <img th:if="${profileUser.avatarUrl != null && profileUser.avatarUrl != '/images/default-avatar.png'}" 
-					      th:src="${profileUser.avatarUrl}" 
-					      alt="Profile Picture"
-					      style="width: 120px; height: 150px; border-radius: 8px; object-fit: cover;">
-                <div class="profile-info">
-                 <h2> 
-					<span>⭐ Reputation: <strong th:text="${reputation}">0</strong></span>
-					<span th:text="${profileUser.username}">Username</span>
-					<span class="pro-badge" th:if="${profileUser.username == 'DanielSolis'}">PRO</span>
-				</h2>
-                    <div class="rep-points">
-                        🏆 <span th:text="${profileUser.repPoints}">0</span> Rep Points
-                    </div>
+
+<header>
+    <h1>NattyPro.Life Forum</h1>
+    <a href="/" class="back-btn">← Back to Forum</a>
+</header>
+
+<div class="container">
+
+    <!-- Profile Card -->
+    <div class="profile-card">
+        <div class="profile-banner"></div>
+        <div class="profile-body">
+
+            <!-- Avatar + Edit Button -->
+            <div class="avatar-row">
+                <div class="avatar"
+                     th:if="${profileUser.avatarUrl == null || profileUser.avatarUrl == '/images/default-avatar.png'}">
+                    <span th:text="${profileUser.username.substring(0,1).toUpperCase()}">U</span>
+                </div>
+                <div class="avatar"
+                     th:if="${profileUser.avatarUrl != null && profileUser.avatarUrl != '/images/default-avatar.png'}">
+                    <img th:src="${profileUser.avatarUrl}" alt="Avatar"/>
+                </div>
+                <a href="/profile/edit" class="edit-btn" th:if="${isOwnProfile}">Edit Profile</a>
+            </div>
+
+            <!-- Name + PRO -->
+            <div class="profile-name">
+                <h2 th:text="${profileUser.username}">Username</h2>
+                <span class="pro-badge" th:if="${profileUser.username == 'DanielSolis'}">PRO</span>
+            </div>
+
+            <!-- Stats -->
+            <div class="stats-row">
+                <div class="stat-item">
+                    <span class="stat-value" th:text="${userPosts != null ? userPosts.size() : 0}">0</span>
+                    <span class="stat-label">Posts</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-value" th:text="${userComments != null ? userComments.size() : 0}">0</span>
+                    <span class="stat-label">Comments</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-value" th:text="${reputation}">0</span>
+                    <span class="stat-label">⭐ Reputation</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-value" th:text="${profileUser.repPoints}">0</span>
+                    <span class="stat-label">🏆 Rep Points</span>
                 </div>
             </div>
-            
-            <!-- Bio -->
-            <div class="bio" th:if="${profileUser.bio != null && !profileUser.bio.isEmpty()}">
-                <p th:text="${profileUser.bio}">User bio goes here...</p>
-            </div>
-            <div class="bio" th:if="${profileUser.bio == null || profileUser.bio.isEmpty()}">
-                <p style="color: #999;">No bio yet.</p>
-            </div>
-            
-            <!-- Profile Details -->
-            <div class="profile-details">
-				<strong>Age:</strong>
-				<span th:if="${profileUser.showAge != null && profileUser.showAge && profileUser.age != null}" th:text="${profileUser.age}">25</span>
-				<span th:if="${profileUser.showAge == null || !profileUser.showAge || profileUser.age == null}">Hidden</span>
 
-				<strong>Email:</strong>
-				<span th:if="${profileUser.showEmail != null && profileUser.showEmail}" th:text="${profileUser.email}">email@example.com</span>
-				<span th:if="${profileUser.showEmail == null || !profileUser.showEmail}">Hidden</span>
-                
-                <strong>Posts Created:</strong>
-                <span th:text="${userPosts.size()}">0</span>
-                
-                <strong>Comments Made:</strong>
-                <span th:text="${userComments.size()}">0</span>
+            <!-- Bio -->
+            <div class="bio"
+                 th:if="${profileUser.bio != null && !profileUser.bio.isEmpty()}"
+                 th:text="${profileUser.bio}">Bio goes here.</div>
+            <div class="bio empty"
+                 th:if="${profileUser.bio == null || profileUser.bio.isEmpty()}">No bio added yet.</div>
+
+            <!-- Details -->
+            <div class="details-grid">
+                <div class="detail-item">
+                    <div class="detail-label">Age</div>
+                    <div class="detail-value"
+                         th:if="${profileUser.showAge != null && profileUser.showAge && profileUser.age != null}"
+                         th:text="${profileUser.age}">–</div>
+                    <div class="detail-value hidden"
+                         th:if="${profileUser.showAge == null || !profileUser.showAge || profileUser.age == null}">Hidden</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Email</div>
+                    <div class="detail-value"
+                         th:if="${profileUser.showEmail != null && profileUser.showEmail}"
+                         th:text="${profileUser.email}">–</div>
+                    <div class="detail-value hidden"
+                         th:if="${profileUser.showEmail == null || !profileUser.showEmail}">Hidden</div>
+                </div>
             </div>
-            
-			<!-- Social Links -->
-			<div class="social-links" th:if="${profileUser.instagramHandle != null || profileUser.twitterHandle != null || profileUser.youtubeHandle != null}">
-			    <strong>Connect:</strong><br/>
-			    <a th:if="${profileUser.instagramHandle != null}" 
-			       th:href="'https://instagram.com/' + ${profileUser.instagramHandle}" 
-			       target="_blank"
-			       style="color: #E4405F;">
-			        <i class="fab fa-instagram"></i> Instagram
-			    </a>
-			    <a th:if="${profileUser.twitterHandle != null}" 
-			       th:href="'https://twitter.com/' + ${profileUser.twitterHandle}" 
-			       target="_blank"
-			       style="color: #1DA1F2;">
-			        <i class="fab fa-twitter"></i> Twitter
-			    </a>
-			    <a th:if="${profileUser.youtubeHandle != null}" 
-			       th:href="'https://youtube.com/@' + ${profileUser.youtubeHandle}" 
-			       target="_blank"
-			       style="color: #FF0000;">
-			        <i class="fab fa-youtube"></i> YouTube
-			    </a>
-			</div>
-            
-            <!-- Edit Button (only show for own profile) -->
-            <div style="margin-top: 20px;" th:if="${isOwnProfile}">
-                <a href="/profile/edit" class="edit-btn">Edit Profile</a>
+
+            <!-- Social Links -->
+            <div class="social-section"
+                 th:if="${profileUser.instagramHandle != null || profileUser.twitterHandle != null || profileUser.youtubeHandle != null || profileUser.twitchHandle != null}">
+                <div class="social-label">Connect</div>
+                <div class="social-links">
+                    <a th:if="${profileUser.instagramHandle != null}"
+                       th:href="'https://instagram.com/' + ${profileUser.instagramHandle}" target="_blank">
+                        <i class="fab fa-instagram" style="color:#E1306C;"></i>
+                        <span>Instagram</span>
+                    </a>
+                    <a th:if="${profileUser.twitterHandle != null}"
+                       th:href="'https://twitter.com/' + ${profileUser.twitterHandle}" target="_blank">
+                        <i class="fab fa-twitter" style="color:#1DA1F2;"></i>
+                        <span>Twitter</span>
+                    </a>
+                    <a th:if="${profileUser.youtubeHandle != null}"
+                       th:href="'https://youtube.com/@' + ${profileUser.youtubeHandle}" target="_blank">
+                        <i class="fab fa-youtube" style="color:#FF0000;"></i>
+                        <span>YouTube</span>
+                    </a>
+                    <a th:if="${profileUser.twitchHandle != null}"
+                       th:href="'https://twitch.tv/' + ${profileUser.twitchHandle}" target="_blank">
+                        <i class="fab fa-twitch" style="color:#9146FF;"></i>
+                        <span>Twitch</span>
+                    </a>
+                </div>
             </div>
+
         </div>
-        
-        <!-- User's Posts -->
-        <div class="section">
-            <h3>Posts Created (<span th:text="${userPosts.size()}">0</span>)</h3>
-            <div th:if="${userPosts.isEmpty()}">
-                <p style="color: #999;">No posts yet.</p>
-            </div>
-            <div class="post-item" th:each="post : ${userPosts}">
-                <a th:href="@{/post/{id}(id=${post.id})}" class="post-title" th:text="${post.title}">Post Title</a>
+    </div>
+
+    <!-- Posts Section -->
+    <div class="section">
+        <div class="section-header">
+            <h3>Posts Created</h3>
+            <span class="count-badge" th:text="${userPosts != null ? userPosts.size() : 0}">0</span>
+        </div>
+        <div class="empty-state" th:if="${userPosts == null || userPosts.isEmpty()}">No posts yet.</div>
+        <div class="post-item" th:each="post : ${userPosts}">
+            <a th:href="@{/post/{id}(id=${post.id})}" class="post-title" th:text="${post.title}">Post Title</a>
+            <div class="post-meta">
                 <span class="category-badge" th:text="${post.category}">Category</span>
-                <div class="timestamp" th:text="${post.createdAt}">2025-01-01</div>
-            </div>
-        </div>
-        
-        <!-- User's Comments -->
-        <div class="section">
-            <h3>Recent Comments (<span th:text="${userComments.size()}">0</span>)</h3>
-            <div th:if="${userComments.isEmpty()}">
-                <p style="color: #999;">No comments yet.</p>
-            </div>
-            <div class="comment-item" th:each="comment : ${userComments}">
-                <p th:text="${comment.content}">Comment text...</p>
-                <div class="timestamp" th:text="${comment.createdAt}">2025-01-01</div>
+                <span class="timestamp" th:text="${post.createdAt}">Date</span>
             </div>
         </div>
     </div>
+
+    <!-- Comments Section -->
+    <div class="section">
+        <div class="section-header">
+            <h3>Recent Comments</h3>
+            <span class="count-badge" th:text="${userComments != null ? userComments.size() : 0}">0</span>
+        </div>
+        <div class="empty-state" th:if="${userComments == null || userComments.isEmpty()}">No comments yet.</div>
+        <div class="comment-item" th:each="comment : ${userComments}">
+            <p style="margin: 0 0 5px; font-size: 14px; line-height: 1.5;" th:text="${comment.content}">Comment text</p>
+            <span class="timestamp" th:text="${comment.createdAt}">Date</span>
+        </div>
+    </div>
+
+</div>
 </body>
 </html>

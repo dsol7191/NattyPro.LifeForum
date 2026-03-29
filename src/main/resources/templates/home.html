@@ -1,356 +1,572 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
-    <title>NattyPro.Life</title>
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<style>
-	    body { 
-	        font-family: Arial, sans-serif; 
-	        margin: 0; 
-	        padding: 0; 
-	        background: #f5f5f5; 
-	    }
-	    
-	    .container { 
-	        display: flex; 
-	        max-width: 1200px; 
-	        margin: 20px auto; 
-	        gap: 20px; 
-	        padding: 0 20px; 
-	    }
-	    
-	    .main-content { 
-	        flex: 1; 
-	        min-width: 0; /* Prevents flex item overflow */
-	    }
-	    
-	    .sidebar { 
-	        width: 250px; 
-	        background: white; 
-	        padding: 20px; 
-	        border-radius: 5px; 
-	        border: 1px solid #ddd; 
-	        height: fit-content; 
-	    }
-	    
-	    .sidebar h3 { 
-	        margin-top: 0; 
-	        color: #333; 
-	    }
-	    
-	    .category-link { 
-	        display: block; 
-	        padding: 10px; 
-	        margin: 5px 0; 
-	        background: #f9f9f9; 
-	        border-radius: 3px; 
-	        text-decoration: none; 
-	        color: #333; 
-	        border-left: 3px solid #007bff; 
-	    }
-	    
-	    .category-link:hover { 
-	        background: #e8f4f8; 
-	    }
-	    
-	    .category-link.active { 
-	        background: #007bff; 
-	        color: white; 
-	    }
-	    
-	    .category-count { 
-	        float: right; 
-	        color: #666; 
-	        font-size: 12px; 
-	    }
-	    
-	    .post { 
-	        border: 1px solid #ccc; 
-	        padding: 20px; 
-	        margin: 20px 0; 
-	        border-radius: 5px; 
-	        background: white; 
-	        word-wrap: break-word;
-	    }
-	    
-	    .post h2 { 
-	        margin-top: 0; 
-	        color: #333;
-	        font-size: 1.5em;
-	    }
-	    
-	    .author { 
-	        color: #666; 
-	        font-size: 14px; 
-	    }
-	    
-	    .category-badge { 
-	        display: inline-block; 
-	        background: #007bff; 
-	        color: white; 
-	        padding: 5px 10px; 
-	        border-radius: 3px; 
-	        font-size: 12px; 
-	        margin-bottom: 10px; 
-	    }
-		
-		.pro-badge {
-		    display: inline-block;
-		    background: linear-gradient(135deg, #FFD700, #FFA500);
-		    color: #000;
-		    font-weight: bold;
-		    font-size: 10px;
-		    padding: 2px 6px;
-		    border-radius: 3px;
-		    margin-left: 5px;
-		    vertical-align: middle;
-		    letter-spacing: 0.5px;
-		    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
-		}
-	    
-	    .create-form { 
-	        background: white; 
-	        padding: 20px; 
-	        border-radius: 5px; 
-	        margin-bottom: 30px; 
-	        border: 1px solid #ddd; 
-	    }
-	    
-	    input, textarea, select { 
-	        width: 100%; 
-	        padding: 10px; 
-	        margin: 10px 0; 
-	        box-sizing: border-box; 
-	        border: 1px solid #ddd; 
-	        border-radius: 3px;
-	        font-size: 16px; /* Prevents iOS zoom on input */
-	    }
-	    
-	    button { 
-	        background: #007bff; 
-	        color: white; 
-	        padding: 12px 20px; 
-	        border: none; 
-	        border-radius: 5px; 
-	        cursor: pointer;
-	        font-size: 16px;
-	        min-height: 44px; /* Touch-friendly */
-	    }
-	    
-	    button:hover { 
-	        background: #0056b3; 
-	    }
-	    
-	    h1 { 
-	        background: white; 
-	        padding: 20px; 
-	        margin: 0 0 20px 0; 
-	        border-radius: 5px; 
-	        border: 1px solid #ddd;
-	        font-size: 1.8em;
-	    }
-	    
-	    h2 {
-	        font-size: 1.3em;
-	    }
-	    
-	    /* Mobile Responsive Styles */
-	    @media (max-width: 768px) {
-	        .container {
-	            flex-direction: column;
-	            padding: 0 10px;
-	            margin: 10px auto;
-	            gap: 10px;
-	        }
-	        
-	        .sidebar {
-	            width: 100%;
-	            order: 2; /* Sidebar goes below content on mobile */
-	            margin-top: 20px;
-	        }
-	        
-	        .main-content {
-	            order: 1;
-	        }
-	        
-	        .post {
-	            padding: 15px;
-	            margin: 10px 0;
-	        }
-	        
-	        .post h2 {
-	            font-size: 1.3em;
-	        }
-	        
-	        h1 {
-	            padding: 15px;
-	            font-size: 1.5em;
-	        }
-	        
-	        .create-form {
-	            padding: 15px;
-	        }
-	        
-	        .author {
-	            font-size: 13px;
-	        }
-	        
-	        button {
-	            width: 100%;
-	            padding: 15px;
-	        }
-	        
-	        /* Make header more compact on mobile */
-	        .header-container {
-	            flex-direction: column;
-	            gap: 10px;
-	            text-align: center;
-	        }
-	    }
-	    
-	    /* Tablet Responsive */
-	    @media (min-width: 769px) and (max-width: 1024px) {
-	        .sidebar {
-	            width: 200px;
-	        }
-	        
-	        .container {
-	            padding: 0 15px;
-	        }
-	    }
-	</style>
+    <title>NattyPro.Life Forum</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@500&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; }
+
+        :root {
+            --blue: #0070f3;
+            --blue-light: #e8f1ff;
+            --gold-gradient: linear-gradient(135deg, #FFD700, #FFA500);
+            --text: #1a1a2e;
+            --text-muted: #6b7280;
+            --border: #e5e7eb;
+            --bg: #f4f6fb;
+            --white: #ffffff;
+            --radius: 12px;
+            --shadow: 0 2px 12px rgba(0,0,0,0.07);
+        }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: var(--bg);
+            color: var(--text);
+        }
+
+        /* ── Header ── */
+        header {
+            background: var(--blue);
+            color: white;
+            padding: 14px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 8px rgba(0,112,243,0.3);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-left a {
+            text-decoration: none;
+            color: white;
+        }
+
+        .header-left h1 {
+            margin: 0;
+            font-size: 1.2rem;
+            font-weight: 700;
+            letter-spacing: -0.3px;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .user-info {
+            text-align: right;
+            font-size: 13px;
+            line-height: 1.4;
+        }
+
+        .user-info a {
+            color: white;
+            text-decoration: underline;
+            font-weight: 600;
+        }
+
+        .user-info small {
+            opacity: 0.85;
+            display: block;
+        }
+
+        .header-btn {
+            background: rgba(255,255,255,0.15);
+            color: white;
+            border: 1px solid rgba(255,255,255,0.3);
+            padding: 7px 14px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.2s;
+            font-family: 'DM Sans', sans-serif;
+        }
+
+        .header-btn:hover { background: rgba(255,255,255,0.25); }
+
+        /* ── Layout ── */
+        .container {
+            max-width: 1160px;
+            margin: 28px auto;
+            padding: 0 20px;
+            display: flex;
+            gap: 22px;
+            align-items: flex-start;
+        }
+
+        .main-content { flex: 1; min-width: 0; }
+
+        /* ── Sidebar ── */
+        .sidebar {
+            width: 240px;
+            flex-shrink: 0;
+        }
+
+        .sidebar-card {
+            background: var(--white);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+
+        .sidebar-title {
+            padding: 14px 16px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .category-link {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 16px;
+            text-decoration: none;
+            color: var(--text);
+            font-size: 14px;
+            font-weight: 500;
+            border-left: 3px solid transparent;
+            transition: all 0.15s;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .category-link:last-child { border-bottom: none; }
+
+        .category-link:hover {
+            background: var(--blue-light);
+            border-left-color: var(--blue);
+            color: var(--blue);
+        }
+
+        .category-link.active {
+            background: var(--blue-light);
+            border-left-color: var(--blue);
+            color: var(--blue);
+            font-weight: 600;
+        }
+
+        .category-count {
+            font-size: 11px;
+            font-family: 'DM Mono', monospace;
+            background: var(--bg);
+            color: var(--text-muted);
+            padding: 2px 7px;
+            border-radius: 20px;
+            font-weight: 500;
+        }
+
+        .category-link.active .category-count {
+            background: var(--blue);
+            color: white;
+        }
+
+        /* ── Page Heading ── */
+        .page-heading {
+            margin-bottom: 18px;
+        }
+
+        .page-heading h2 {
+            margin: 0;
+            font-size: 1.4rem;
+            font-weight: 700;
+            letter-spacing: -0.3px;
+        }
+
+        .page-heading p {
+            margin: 4px 0 0;
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+
+        /* ── Create Form ── */
+        .create-form {
+            background: var(--white);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 22px 24px;
+            margin-bottom: 20px;
+        }
+
+        .create-form h3 {
+            margin: 0 0 16px;
+            font-size: 0.95rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+            color: var(--text-muted);
+        }
+
+        .form-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .create-form input,
+        .create-form select,
+        .create-form textarea {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 14px;
+            color: var(--text);
+            background: var(--bg);
+            transition: border-color 0.2s;
+            outline: none;
+        }
+
+        .create-form input:focus,
+        .create-form select:focus,
+        .create-form textarea:focus {
+            border-color: var(--blue);
+            background: var(--white);
+        }
+
+        .create-form select { flex: 0 0 200px; }
+        .create-form input[type="text"] { flex: 1; }
+
+        .create-form textarea {
+            resize: vertical;
+            min-height: 90px;
+            margin-bottom: 10px;
+        }
+
+        .submit-btn {
+            background: var(--blue);
+            color: white;
+            padding: 10px 24px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            font-family: 'DM Sans', sans-serif;
+            transition: background 0.2s;
+            min-height: 40px;
+        }
+
+        .submit-btn:hover { background: #005ed4; }
+
+        /* ── Post Cards ── */
+        .posts-header {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+            margin-bottom: 10px;
+            padding: 0 4px;
+        }
+
+        .post-card {
+            background: var(--white);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 18px 20px;
+            margin-bottom: 12px;
+            transition: box-shadow 0.2s, transform 0.15s;
+        }
+
+        .post-card:hover {
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            transform: translateY(-1px);
+        }
+
+        .post-card-top {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+            flex-wrap: wrap;
+        }
+
+        .category-badge {
+            display: inline-block;
+            background: var(--blue-light);
+            color: var(--blue);
+            padding: 2px 9px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .post-title-link {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--text);
+            text-decoration: none;
+            display: block;
+            margin-bottom: 6px;
+            letter-spacing: -0.2px;
+            line-height: 1.3;
+        }
+
+        .post-title-link:hover { color: var(--blue); }
+
+        .post-excerpt {
+            font-size: 14px;
+            color: var(--text-muted);
+            line-height: 1.5;
+            margin: 0 0 12px;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .post-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 8px;
+            font-size: 13px;
+            color: var(--text-muted);
+            border-top: 1px solid var(--border);
+            padding-top: 10px;
+        }
+
+        .post-footer-left {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+
+        .author-link {
+            color: var(--blue);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .author-link:hover { text-decoration: underline; }
+
+        .pro-badge {
+            display: inline-block;
+            background: var(--gold-gradient);
+            color: #000;
+            font-weight: 700;
+            font-size: 10px;
+            padding: 2px 6px;
+            border-radius: 3px;
+            letter-spacing: 0.5px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+            vertical-align: middle;
+        }
+
+        .dot { color: var(--border); }
+
+        .post-footer-right {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .view-link {
+            color: var(--blue);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 13px;
+        }
+
+        .view-link:hover { text-decoration: underline; }
+
+        .delete-btn {
+            background: #fee2e2;
+            color: #dc2626;
+            border: none;
+            padding: 4px 10px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+            font-family: 'DM Sans', sans-serif;
+            transition: background 0.2s;
+        }
+
+        .delete-btn:hover { background: #fecaca; }
+
+        .empty-state {
+            text-align: center;
+            padding: 48px 20px;
+            color: var(--text-muted);
+            background: var(--white);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+        }
+
+        /* ── Mobile ── */
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+                padding: 0 12px;
+                margin: 16px auto;
+                gap: 16px;
+            }
+
+            .sidebar { width: 100%; order: 2; }
+            .main-content { order: 1; }
+
+            .form-row { flex-direction: column; }
+            .create-form select { flex: unset; }
+
+            .header-right .user-info { display: none; }
+
+            .post-card { padding: 14px 16px; }
+
+            .submit-btn { width: 100%; }
+        }
+    </style>
 </head>
 <body>
-	<div style="background: #007bff; color: white; padding: 15px 20px; margin-bottom: 20px;">
-	    <div class="header-container" style="max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center;">
-			<a href="/" style="text-decoration: none;">
-			    <h2 style="margin: 0; color: white;">NattyPro.Life</h2>
-			</a>
-			<div th:if="${#authorization.expression('isAuthenticated()')}">
-			    <div style="display: flex; align-items: center; gap: 15px;">
-			        <div>
-			            <span>Welcome, </span>
-			            <a th:href="@{/profile/{username}(username=${#authentication.name})}" 
-			               style="color: white; text-decoration: underline;">
-			                <span th:text="${#authentication.name}">User</span>
-			            </a>
-			            <br/>
-			            <small style="opacity: 0.9;">
-			                <span th:text="${rankEmoji}">🌱</span>
-			                <span th:text="${userRank}">Member</span> • 
-			                <span th:text="${userPostCount}">0</span> posts
-			            </small>
-			        </div>
-			        <span style="color: rgba(255,255,255,0.5);">|</span>
-			        <a th:href="@{/profile/{username}(username=${#authentication.name})}" 
-			           style="color: white; text-decoration: none; background: rgba(255,255,255,0.2); padding: 5px 10px; border-radius: 3px;">
-			            My Profile
-			        </a>
-			        <span style="color: rgba(255,255,255,0.5);">|</span>
-			        <form th:action="@{/logout}" method="post" style="display: inline;">
-			            <button type="submit" style="background: none; border: none; color: white; cursor: pointer; text-decoration: underline; font-size: inherit;">Logout</button>
-			        </form>
-			    </div>
-			</div>
-	    </div>
-	</div>
-    <div class="container">
-        <div class="main-content">
-			<h1 th:if="${selectedCategory == 'All'}">Welcome to The NattyPro.Life Forum!</h1>
-			<h1 th:if="${selectedCategory != 'All'}" th:text="${selectedCategory}">Category Name</h1>
-            
-            <div class="create-form">
-                <h2>Start a Discussion:</h2>
-                <form th:action="@{/create}" th:object="${newPost}" method="post">
-                    <input type="text" th:field="*{title}" placeholder="Post Title" required />
-                    
-					<select th:field="*{category}" required>
-					    <option value="">Select a category...</option>
-					    <option th:each="cat : ${categories}" th:value="${cat}" th:text="${cat}"></option>
-					</select>
-                    
-                    <textarea th:field="*{content}" rows="4" placeholder="Post Content" required></textarea>
-                 
-                    <button type="submit">Post</button>
-                </form>
-            </div>
-            
-            <h2>Recent Posts <span th:if="${selectedCategory != 'All'}" th:text="'in ' + ${selectedCategory}"></span></h2>
-            
-			<div th:each="post : ${posts}" class="post">
-			    <span class="category-badge" th:text="${post.category}">Category</span>
-			    <h2><a th:href="@{/post/{id}(id=${post.id})}" th:text="${post.title}" style="color: #333; text-decoration: none;">Post Title</a></h2>
-			    <p class="post-content" th:text="${post.content}" style="white-space: pre-wrap;">Post content goes here</p>
-				<p class="author">
-					Posted by: 
-					<a th:href="@{/profile/{username}(username=${post.author})}" 
-					   style="color: #007bff; text-decoration: none; font-weight: bold;"
-					   th:text="${post.author}">Author</a>
-					<span class="pro-badge" th:if="${post.author == 'DanielSolis'}">PRO</span>
-			        <span th:if="${post.createdAt}" th:text="' • ' + ${#temporals.format(post.createdAt, 'MMM dd, yyyy hh:mm a')}"></span>
-					<span> • <a th:href="@{/post/{id}(id=${post.id})}" style="color: #007bff; text-decoration: none;">View/Comment</a></span>
-					
-					<!-- Delete button - shows if you're the author OR an admin -->
-					<span sec:authorize="isAuthenticated()">
-					    <form th:if="${#authentication.name == post.author} or ${#authorization.expression('hasRole(''ADMIN'')')}" 
-					          th:action="@{/delete/{id}(id=${post.id})}" method="post" style="display: inline; margin-left: 15px;">
-					        <button type="submit" style="background: #dc3545; padding: 5px 10px; font-size: 12px;" 
-					                onclick="return confirm('Are you sure you want to delete this post?');">Delete</button>
-					    </form>
-					</span>
-			    </p>
-			</div>
-            
-            <p th:if="${#lists.isEmpty(posts)}">No posts yet! Be the first to post.</p>
+
+<header>
+    <div class="header-left">
+        <a href="/"><h1>NattyPro.Life</h1></a>
+    </div>
+    <div class="header-right" th:if="${#authorization.expression('isAuthenticated()')}">
+        <div class="user-info">
+            <span>Welcome, </span>
+            <a th:href="@{/profile/{username}(username=${#authentication.name})}"
+               th:text="${#authentication.name}">User</a>
+            <small>
+                <span th:text="${rankEmoji}">🌱</span>
+                <span th:text="${userRank}">Member</span> •
+                <span th:text="${userPostCount}">0</span> posts
+            </small>
         </div>
-        
-		<div class="sidebar">
-		    <h3>Forum Categories</h3>
-		    
-		    <a href="/" class="category-link" th:classappend="${selectedCategory == 'All'} ? 'active' : ''">
-		        All Posts
-		        <span class="category-count" th:text="${totalCount}">0</span>
-		    </a>
-		    
-		    <a href="/?category=Training" class="category-link" th:classappend="${selectedCategory == 'Training'} ? 'active' : ''">
-		        💪 Training
-		        <span class="category-count" th:text="${trainingCount}">0</span>
-		    </a>
-		    
-		    <a href="/?category=Nutrition" class="category-link" th:classappend="${selectedCategory == 'Nutrition'} ? 'active' : ''">
-		        🍎 Nutrition
-		        <span class="category-count" th:text="${nutritionCount}">0</span>
-		    </a>
-		    
-		    <a href="/?category=Recovery" class="category-link" th:classappend="${selectedCategory == 'Recovery'} ? 'active' : ''">
-		        😴 Recovery
-		        <span class="category-count" th:text="${recoveryCount}">0</span>
-		    </a>
-		    
-		    <a href="/?category=Mindset" class="category-link" th:classappend="${selectedCategory == 'Mindset'} ? 'active' : ''">
-		        🧠 Mindset
-		        <span class="category-count" th:text="${mindsetCount}">0</span>
-		    </a>
-		    
-		    <a href="/?category=Prep Files" class="category-link" th:classappend="${selectedCategory == 'Prep Files'} ? 'active' : ''">
-		        📁 Prep Files
-		        <span class="category-count" th:text="${prepFilesCount}">0</span>
-		    </a>
-		    
-		    <a href="/?category=Coaches Corner" class="category-link" th:classappend="${selectedCategory == 'Coaches Corner'} ? 'active' : ''">
-		        🎓 Coaches Corner
-		        <span class="category-count" th:text="${coachesCornerCount}">0</span>
-		    </a>
-		    
-		    <a href="/?category=Self Promotion" class="category-link" th:classappend="${selectedCategory == 'Self Promotion'} ? 'active' : ''">
-		        📣 Self Promotion
-		        <span class="category-count" th:text="${selfPromotionCount}">0</span>
-		    </a>
-		    
-		    <a href="/?category=Random Side Quests" class="category-link" th:classappend="${selectedCategory == 'Random Side Quests'} ? 'active' : ''">
-		        🎲 Random Side Quests
-		        <span class="category-count" th:text="${randomSideQuestsCount}">0</span>
-		    </a>    
-		</div>
+        <a th:href="@{/profile/{username}(username=${#authentication.name})}" class="header-btn">My Profile</a>
+        <form th:action="@{/logout}" method="post" style="display:inline;">
+            <button type="submit" class="header-btn">Logout</button>
+        </form>
+    </div>
+</header>
+
+<div class="container">
+
+    <!-- ── Main Content ── -->
+    <div class="main-content">
+
+        <div class="page-heading">
+            <h2 th:if="${selectedCategory == 'All'}">Welcome to NattyPro.Life 👊</h2>
+            <h2 th:if="${selectedCategory != 'All'}" th:text="${selectedCategory}">Category</h2>
+            <p th:if="${selectedCategory == 'All'}">A forum for the natural bodybuilding community.</p>
+        </div>
+
+        <!-- Create Post Form -->
+        <div class="create-form">
+            <h3>Start a Discussion</h3>
+            <form th:action="@{/create}" th:object="${newPost}" method="post">
+                <div class="form-row">
+                    <input type="text" th:field="*{title}" placeholder="Post title..." required/>
+                    <select th:field="*{category}" required>
+                        <option value="">Select category...</option>
+                        <option th:each="cat : ${categories}" th:value="${cat}" th:text="${cat}"></option>
+                    </select>
+                </div>
+                <textarea th:field="*{content}" placeholder="Share your thoughts, questions, or knowledge..." required></textarea>
+                <button type="submit" class="submit-btn">Post</button>
+            </form>
+        </div>
+
+        <!-- Posts List -->
+        <div class="posts-header">
+            Recent Posts
+            <span th:if="${selectedCategory != 'All'}" th:text="'in ' + ${selectedCategory}"></span>
+        </div>
+
+        <div th:if="${#lists.isEmpty(posts)}" class="empty-state">
+            No posts yet — be the first to post!
+        </div>
+
+        <div th:each="post : ${posts}" class="post-card">
+            <div class="post-card-top">
+                <span class="category-badge" th:text="${post.category}">Category</span>
+            </div>
+            <a th:href="@{/post/{id}(id=${post.id})}" class="post-title-link" th:text="${post.title}">Post Title</a>
+            <p class="post-excerpt" th:text="${post.content}">Content preview...</p>
+            <div class="post-footer">
+                <div class="post-footer-left">
+                    <span>By</span>
+                    <a th:href="@{/profile/{username}(username=${post.author})}"
+                       class="author-link" th:text="${post.author}">Author</a>
+                    <span class="pro-badge" th:if="${post.author == 'DanielSolis'}">PRO</span>
+                    <span class="dot">•</span>
+                    <span th:if="${post.createdAt}"
+                          th:text="${#temporals.format(post.createdAt, 'MMM dd, yyyy')}">Date</span>
+                </div>
+                <div class="post-footer-right">
+                    <a th:href="@{/post/{id}(id=${post.id})}" class="view-link">View Thread →</a>
+                    <span sec:authorize="isAuthenticated()">
+                        <form th:if="${#authentication.name == post.author} or ${#authorization.expression('hasRole(''ADMIN'')')}"
+                              th:action="@{/delete/{id}(id=${post.id})}" method="post" style="display:inline;">
+                            <button type="submit" class="delete-btn"
+                                    onclick="return confirm('Delete this post?');">Delete</button>
+                        </form>
+                    </span>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ── Sidebar ── -->
+    <div class="sidebar">
+        <div class="sidebar-card">
+            <div class="sidebar-title">Categories</div>
+
+            <a href="/" class="category-link" th:classappend="${selectedCategory == 'All'} ? 'active' : ''">
+                All Posts
+                <span class="category-count" th:text="${totalCount}">0</span>
+            </a>
+            <a href="/?category=Training" class="category-link" th:classappend="${selectedCategory == 'Training'} ? 'active' : ''">
+                💪 Training
+                <span class="category-count" th:text="${trainingCount}">0</span>
+            </a>
+            <a href="/?category=Nutrition" class="category-link" th:classappend="${selectedCategory == 'Nutrition'} ? 'active' : ''">
+                🍎 Nutrition
+                <span class="category-count" th:text="${nutritionCount}">0</span>
+            </a>
+            <a href="/?category=Recovery" class="category-link" th:classappend="${selectedCategory == 'Recovery'} ? 'active' : ''">
+                😴 Recovery
+                <span class="category-count" th:text="${recoveryCount}">0</span>
+            </a>
+            <a href="/?category=Mindset" class="category-link" th:classappend="${selectedCategory == 'Mindset'} ? 'active' : ''">
+                🧠 Mindset
+                <span class="category-count" th:text="${mindsetCount}">0</span>
+            </a>
+            <a href="/?category=Prep Files" class="category-link" th:classappend="${selectedCategory == 'Prep Files'} ? 'active' : ''">
+                📁 Prep Files
+                <span class="category-count" th:text="${prepFilesCount}">0</span>
+            </a>
+            <a href="/?category=Coaches Corner" class="category-link" th:classappend="${selectedCategory == 'Coaches Corner'} ? 'active' : ''">
+                🎓 Coaches Corner
+                <span class="category-count" th:text="${coachesCornerCount}">0</span>
+            </a>
+            <a href="/?category=Self Promotion" class="category-link" th:classappend="${selectedCategory == 'Self Promotion'} ? 'active' : ''">
+                📣 Self Promotion
+                <span class="category-count" th:text="${selfPromotionCount}">0</span>
+            </a>
+            <a href="/?category=Random Side Quests" class="category-link" th:classappend="${selectedCategory == 'Random Side Quests'} ? 'active' : ''">
+                🎲 Random Side Quests
+                <span class="category-count" th:text="${randomSideQuestsCount}">0</span>
+            </a>
+        </div>
+    </div>
+
+</div>
 </body>
 </html>
