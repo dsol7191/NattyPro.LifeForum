@@ -381,7 +381,7 @@
 
             div.innerHTML = `
                 <div class="message-meta">
-                    <span class="message-sender">${isOwn ? 'You' : data.sender}</span>
+                    <span class="message-sender">${data.sender}</span>
                     <span class="message-time">${data.time}</span>
                 </div>
                 <div class="message-bubble">${escapeHtml(data.content)}</div>

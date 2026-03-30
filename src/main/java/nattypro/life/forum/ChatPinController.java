@@ -53,7 +53,7 @@ public class ChatPinController {
     @GetMapping("/admin/pins")
     public String adminPins(Model model, Authentication authentication) {
         User user = userRepository.findByUsername(authentication.getName()).orElseThrow();
-        if (!user.getRole().equals("ROLE_ADMIN")) {
+        if (!user.getRole().equals("ADMIN")) {
             return "redirect:/";
         }
         model.addAttribute("pins", pinRepository.findAllByOrderByCreatedAtDesc());
@@ -63,12 +63,11 @@ public class ChatPinController {
     @PostMapping("/admin/pins/generate")
     public String generatePin(Authentication authentication) {
         User user = userRepository.findByUsername(authentication.getName()).orElseThrow();
-        if (!user.getRole().equals("ROLE_ADMIN")) {
+        if (!user.getRole().equals("ADMIN")) {
             return "redirect:/";
         }
 
         ChatInvitePin pin = new ChatInvitePin();
-        // Generate a clean 8-char alphanumeric PIN
         pin.setPin(UUID.randomUUID().toString().replace("-", "").substring(0, 8).toUpperCase());
         pin.setCreatedBy(authentication.getName());
         pinRepository.save(pin);
