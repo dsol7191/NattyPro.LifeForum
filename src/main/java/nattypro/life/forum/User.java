@@ -1,6 +1,17 @@
 package nattypro.life.forum;
-import jakarta.persistence.*;
-import jakarta.validation.constraints.*;
+import java.time.LocalDateTime;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 
 @Entity
 @Table(name = "users")
@@ -65,6 +76,18 @@ public class User {
     @Column(name = "show_age")
     private Boolean showAge = true;
     
+    @Column(name = "accepted_rules")
+    private Boolean acceptedRules = false;
+
+    @Column(name = "chat_access")
+    private Boolean chatAccess = false;
+
+    @Column(name = "chat_muted_until")
+    private LocalDateTime chatMutedUntil;
+
+    @Column(name = "chat_suspended")
+    private Boolean chatSuspended = false;
+    
     // ========== CONSTRUCTORS ==========
     
     public User() { 
@@ -87,6 +110,19 @@ public class User {
     }
     
     // ========== GETTERS AND SETTERS ==========
+    
+    public Boolean getAcceptedRules() { return acceptedRules; }
+    public void setAcceptedRules(Boolean acceptedRules) { this.acceptedRules = acceptedRules; }
+
+    public Boolean getChatAccess() { return chatAccess; }
+    public void setChatAccess(Boolean chatAccess) { this.chatAccess = chatAccess; }
+
+    public LocalDateTime getChatMutedUntil() { return chatMutedUntil; }
+    public void setChatMutedUntil(LocalDateTime chatMutedUntil) { this.chatMutedUntil = chatMutedUntil; }
+
+    public Boolean getChatSuspended() { return chatSuspended; }
+    public void setChatSuspended(Boolean chatSuspended) { this.chatSuspended = chatSuspended; }
+
     
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
