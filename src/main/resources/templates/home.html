@@ -448,10 +448,12 @@
                 <span th:text="${userPostCount}">0</span> posts
             </small>
         </div>
-        <a th:href="@{/profile/{username}(username=${#authentication.name})}" class="header-btn">My Profile</a>
-        <form th:action="@{/logout}" method="post" style="display:inline;">
-            <button type="submit" class="header-btn">Logout</button>
-        </form>
+		<a th:href="@{/profile/{username}(username=${#authentication.name})}" class="header-btn">My Profile</a>
+		<a th:if="${#authorization.expression('hasRole(''ADMIN'')')}" 
+		   href="/admin/pins" class="header-btn">🔐 Pins</a>
+		<form th:action="@{/logout}" method="post" style="display:inline;">
+		    <button type="submit" class="header-btn">Logout</button>
+		</form>
     </div>
 </header>
 
@@ -566,7 +568,12 @@
             </a>
         </div>
     </div>
-
+	<div style="margin-top: 16px; border-top: 1px solid var(--border); padding-top: 16px;">
+	    <div class="sidebar-title">Chat Rooms</div>
+	    <a href="/chat/global" class="category-link">💬 Global Chat</a>
+	    <a href="/chat/training" class="category-link">💪 Training Chat</a>
+	    <a href="/chat/nutrition" class="category-link">🍎 Nutrition Chat</a>
+	</div>
 </div>
 </body>
 </html>

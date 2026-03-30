@@ -54,12 +54,6 @@ public class ChatController {
 
         User user = userRepository.findByUsername(authentication.getName()).orElseThrow();
 
-        // Check chat access
-        if (user.getChatAccess() == null || !user.getChatAccess()) {
-            model.addAttribute("error", "You need a chat invite PIN to access the chat room.");
-            return "chat-locked";
-        }
-
         // Check suspension
         if (Boolean.TRUE.equals(user.getChatSuspended())) {
             model.addAttribute("error", "Your chat access has been suspended.");

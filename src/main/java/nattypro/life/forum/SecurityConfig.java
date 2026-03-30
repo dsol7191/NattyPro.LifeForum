@@ -34,15 +34,7 @@ public class SecurityConfig {
         http
             .authenticationProvider(authenticationProvider())
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers(
-                    "/register",
-                    "/register/age",
-                    "/register/rules",
-                    "/login",
-                    "/h2-console/**",
-                    "/ws/**",
-                    "/chat/**"
-                ).permitAll()
+                
                 .anyRequest().authenticated()
             )
             .formLogin(form -> form
