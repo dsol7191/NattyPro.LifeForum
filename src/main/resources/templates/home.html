@@ -454,6 +454,8 @@
 		   href="/admin/pins" class="header-btn">🔐 Pins</a>
 		   <a th:if="${#authorization.expression('hasRole(''ADMIN'')')}" 
 		      href="/admin/users" class="header-btn">👥 Users</a>
+			  <a th:if="${#authorization.expression('hasRole(''ADMIN'')')}"
+			     href="/admin/content" class="header-btn">📢 Content</a>
 		<form th:action="@{/logout}" method="post" style="display:inline;">
 		    <button type="submit" class="header-btn">Logout</button>
 		</form>
@@ -515,7 +517,7 @@
                     <span>By</span>
                     <a th:href="@{/profile/{username}(username=${post.author})}"
                        class="author-link" th:text="${post.author}">Author</a>
-                    <span class="pro-badge" th:if="${proStatusMap[post.author]}">PRO</span>>PRO</span>
+                    <span class="pro-badge" th:if="${proStatusMap[post.author]}">PRO</span>
                     <span class="dot">•</span>
                     <span th:if="${post.createdAt}"
                           th:text="${#temporals.format(post.createdAt, 'MMM dd, yyyy')}">Date</span>
