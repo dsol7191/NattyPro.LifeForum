@@ -32,6 +32,8 @@ public class HomeController {
     private AnnouncementRepository announcementRepo;
     @Autowired
     private BannerRepository bannerRepo;
+    @Autowired
+    private YouTubeFeedService youtubeFeedService;
     
  // Define all categories in one place
     private static final List<String> CATEGORIES = Arrays.asList(
@@ -131,6 +133,14 @@ public class HomeController {
             model.addAttribute("rankEmoji", rankEmoji);
             model.addAttribute("announcements", announcementRepo.findByIsActiveTrueOrderByCreatedAtDesc());
             model.addAttribute("banners", bannerRepo.findByIsActiveTrueOrderByDisplayOrderAsc());
+            
+         // YouTube feed for banner
+            if (youtubeFeedService.hasCachedVideos()) {
+                model.addAttribute("youtubeVideos", youtubeFeedService.getLatestVideos());
+            } else {
+                youtubeFeedService.initializeCache();
+                model.addAttribute("youtubeVideos", youtubeFeedService.getLatestVideos());
+            }
         }
         
         return "home";
