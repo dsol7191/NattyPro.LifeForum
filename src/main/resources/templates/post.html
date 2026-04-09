@@ -404,7 +404,7 @@
                 <span>Posted by</span>
                 <a th:href="@{/profile/{username}(username=${post.author})}"
                    class="author-link" th:text="${post.author}">Author</a>
-                <span class="pro-badge" th:if="${post.author == 'DanielSolis'}">PRO</span>
+                <span class="pro-badge" th:if="${postAuthorPro}">PRO</span>
                 <span class="dot">•</span>
                 <span th:if="${post.createdAt}"
                       th:text="${#temporals.format(post.createdAt, 'MMM dd, yyyy hh:mm a')}">Date</span>
@@ -427,7 +427,7 @@
             <div class="comment-header">
                 <a th:href="@{/profile/{username}(username=${comment.author})}"
                    class="author-link comment-author" th:text="${comment.author}">Author</a>
-                <span class="pro-badge" th:if="${comment.author == 'DanielSolis'}">PRO</span>
+                <span class="pro-badge" th:if="${commentProStatus != null and commentProStatus[comment.author]}">PRO</span>
                 <span class="dot">•</span>
                 <span class="comment-time"
                       th:text="${#temporals.format(comment.createdAt, 'MMM dd, yyyy hh:mm a')}">Time</span>

@@ -35,6 +35,12 @@ public class User {
     @Column(nullable = false, length = 20)
     private String role = "USER";
     
+    @Column(name = "verified_natty_pro")
+    private Boolean verifiedNattyPro = false;
+
+    public Boolean getVerifiedNattyPro() { return verifiedNattyPro; }
+    public void setVerifiedNattyPro(Boolean verifiedNattyPro) { this.verifiedNattyPro = verifiedNattyPro; }
+    
     // ========== PROFILE FIELDS ==========
     
     @Column(name = "avatar_url", length = 255)

@@ -1,15 +1,16 @@
 package nattypro.life.forum;
 
+import java.time.LocalDateTime;
+import java.util.UUID;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-
-import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Controller
 public class ChatPinController {
@@ -73,5 +74,26 @@ public class ChatPinController {
         pinRepository.save(pin);
 
         return "redirect:/admin/pins";
+    }
+    @GetMapping("/admin/users")
+    public String adminUsers(Model model, Authentication authentication) {
+        User user = userRepository.findByUsername(authentication.getName()).orElseThrow();
+        if (!user.getRole().equals("ADMIN")) {
+            return "redirect:/";
+        }
+        model.addAttribute("users", userRepository.findAll());
+        return "admin-users";
+    }
+
+    @PostMapping("/admin/users/togglePro/{username}")
+    public String toggleProBadge(@PathVariable String username, Authentication authentication) {
+        User admin = userRepository.findByUsername(authentication.getName()).orElseThrow();
+        if (!admin.getRole().equals("ADMIN")) {
+            return "redirect:/";
+        }
+        User user = userRepository.findByUsername(username).orElseThrow();
+        user.setVerifiedNattyPro(!Boolean.TRUE.equals(user.getVerifiedNattyPro()));
+        userRepository.save(user);
+        return "redirect:/admin/users";
     }
 }

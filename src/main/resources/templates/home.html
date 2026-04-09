@@ -451,6 +451,8 @@
 		<a th:href="@{/profile/{username}(username=${#authentication.name})}" class="header-btn">My Profile</a>
 		<a th:if="${#authorization.expression('hasRole(''ADMIN'')')}" 
 		   href="/admin/pins" class="header-btn">🔐 Pins</a>
+		   <a th:if="${#authorization.expression('hasRole(''ADMIN'')')}" 
+		      href="/admin/users" class="header-btn">👥 Users</a>
 		<form th:action="@{/logout}" method="post" style="display:inline;">
 		    <button type="submit" class="header-btn">Logout</button>
 		</form>

@@ -1,17 +1,19 @@
 package nattypro.life.forum;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import java.util.List;
-import org.springframework.web.bind.annotation.PathVariable;
-import java.util.Arrays;
-import java.time.LocalDateTime;
 
 @Controller
 public class HomeController {
@@ -54,6 +56,20 @@ public class HomeController {
     	        .limit(5)
     	        .collect(Collectors.toList());
     	    model.addAttribute("selectedCategory", "All");
+    	    
+    	 // Build a map of username -> verifiedNattyPro for all post authors
+    	    Map<String, Object> proStatusMap = posts.stream()
+    	    	    .collect(Collectors.toMap(
+    	    	        Post::getAuthor,
+    	    	        p -> {
+    	    	            User u = userRepository.findByUsername(p.getAuthor()).orElse(null);
+    	    	            return u != null && u.getVerifiedNattyPro() != null && u.getVerifiedNattyPro();
+    	    	        },
+    	    	        (a, b) -> a
+    	    	    ));
+    	    	model.addAttribute("proStatusMap", proStatusMap);
+    	    	// PRO status for post author
+    	    	
     	}
         
         
@@ -153,6 +169,21 @@ public class HomeController {
         model.addAttribute("post", post);
         model.addAttribute("comments", comments);
         model.addAttribute("newComment", new Comment());
+        User postAuthor = userRepository.findByUsername(post.getAuthor()).orElse(null);
+    	boolean postAuthorPro = postAuthor != null && Boolean.TRUE.equals(postAuthor.getVerifiedNattyPro());
+    	model.addAttribute("postAuthorPro", postAuthorPro);
+
+    	// PRO status map for comment authors
+    	Map<String, Object> commentProStatus = comments.stream()
+    	    .collect(Collectors.toMap(
+    	        Comment::getAuthor,
+    	        c -> {
+    	            User u = userRepository.findByUsername(c.getAuthor()).orElse(null);
+    	            return u != null && Boolean.TRUE.equals(u.getVerifiedNattyPro());
+    	        },
+    	        (a, b) -> a
+    	    ));
+    	model.addAttribute("commentProStatus", commentProStatus);
         
         // Current user for profile links and PRO badge
         if (authentication != null) {
