@@ -28,6 +28,10 @@ public class HomeController {
     private ThreadFollowRepository followRepo;
     @Autowired
     private PostVoteRepository postVoteRepo;
+    @Autowired
+    private AnnouncementRepository announcementRepo;
+    @Autowired
+    private BannerRepository bannerRepo;
     
  // Define all categories in one place
     private static final List<String> CATEGORIES = Arrays.asList(
@@ -125,6 +129,8 @@ public class HomeController {
             model.addAttribute("userPostCount", userPostCount);
             model.addAttribute("userRank", userRank);
             model.addAttribute("rankEmoji", rankEmoji);
+            model.addAttribute("announcements", announcementRepo.findByIsActiveTrueOrderByCreatedAtDesc());
+            model.addAttribute("banners", bannerRepo.findByIsActiveTrueOrderByDisplayOrderAsc());
         }
         
         return "home";
@@ -148,6 +154,7 @@ public class HomeController {
                 .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
             
             // Allow deletion if user is the author OR an admin
+            
             if (post.getAuthor().equals(currentUser) || isAdmin) {
                 postRepository.delete(post);
             }

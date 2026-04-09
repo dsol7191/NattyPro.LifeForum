@@ -16,7 +16,7 @@ public class Banner {
     private String type;
 
     // For YouTube: video ID. For custom: ignored
-    @Column(name = "youtube_video_id", length = 20)
+    @Column(name = "youtube_video_id", length = 100)
     private String youtubeVideoId;
 
     // For custom: image URL or embed HTML

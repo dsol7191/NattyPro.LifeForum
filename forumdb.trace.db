@@ -1789,3 +1789,6 @@ Caused by: org.h2.mvstore.MVStoreException: The file is locked: C:/Users/dnlsl/O
 	at org.h2.mvstore.SingleFileStore.open(SingleFileStore.java:81)
 	at org.h2.mvstore.MVStore.<init>(MVStore.java:286)
 	... 54 more
+2026-04-09 16:31:33.934684-05:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLDataException: Value too long for column "YOUTUBE_VIDEO_ID CHARACTER VARYING(20)": "'https://www.youtube.com/watch?v=SWbZUE2BTp0' (43)"; SQL statement:
+insert into banners (created_at,custom_content,display_order,is_active,link,title,type,youtube_video_id,id) values (?,?,?,?,?,?,?,?,default) [22001-232]

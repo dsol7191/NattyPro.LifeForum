@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
@@ -44,40 +43,12 @@
             z-index: 100;
         }
 
-        .header-left a {
-            text-decoration: none;
-            color: white;
-        }
-
-        .header-left h1 {
-            margin: 0;
-            font-size: 1.2rem;
-            font-weight: 700;
-            letter-spacing: -0.3px;
-        }
-
-        .header-right {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .user-info {
-            text-align: right;
-            font-size: 13px;
-            line-height: 1.4;
-        }
-
-        .user-info a {
-            color: white;
-            text-decoration: underline;
-            font-weight: 600;
-        }
-
-        .user-info small {
-            opacity: 0.85;
-            display: block;
-        }
+        .header-left a { text-decoration: none; color: white; }
+        .header-left h1 { margin: 0; font-size: 1.2rem; font-weight: 700; letter-spacing: -0.3px; }
+        .header-right { display: flex; align-items: center; gap: 12px; }
+        .user-info { text-align: right; font-size: 13px; line-height: 1.4; }
+        .user-info a { color: white; text-decoration: underline; font-weight: 600; }
+        .user-info small { opacity: 0.85; display: block; }
 
         .header-btn {
             background: rgba(255,255,255,0.15);
@@ -92,8 +63,104 @@
             transition: background 0.2s;
             font-family: 'DM Sans', sans-serif;
         }
-
         .header-btn:hover { background: rgba(255,255,255,0.25); }
+
+        /* ── Ticker ── */
+        .ticker-wrap {
+            background: #1a1a2e;
+            color: white;
+            padding: 8px 0;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+
+        .ticker-track {
+            display: inline-block;
+            animation: ticker-scroll 30s linear infinite;
+        }
+
+        .ticker-track:hover { animation-play-state: paused; }
+
+        .ticker-item {
+            display: inline-block;
+            padding: 0 48px;
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .ticker-item::before { content: '📢 '; }
+
+        @keyframes ticker-scroll {
+            0% { transform: translateX(100vw); }
+            100% { transform: translateX(-100%); }
+        }
+
+        /* ── Hero Banner ── */
+        .banner-wrap {
+            position: relative;
+            width: 100%;
+            background: #1a1a2e;
+            overflow: hidden;
+            height: 280px;
+        }
+
+        .banner-slide {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 0.8s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .banner-slide.active { opacity: 1; }
+
+        .banner-youtube {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .banner-custom {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            text-align: center;
+            color: white;
+            background: linear-gradient(135deg, #0070f3, #004bb5);
+        }
+
+        .banner-custom img { max-width: 100%; max-height: 200px; object-fit: cover; border-radius: 8px; }
+        .banner-custom h3 { margin: 12px 0 8px; font-size: 1.4rem; font-weight: 700; }
+        .banner-custom a { color: white; text-decoration: underline; font-weight: 600; }
+
+        .banner-dots {
+            position: absolute;
+            bottom: 12px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 6px;
+            z-index: 10;
+        }
+
+        .banner-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.4);
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .banner-dot.active { background: white; }
 
         /* ── Layout ── */
         .container {
@@ -106,12 +173,7 @@
         }
 
         .main-content { flex: 1; min-width: 0; }
-
-        /* ── Sidebar ── */
-        .sidebar {
-            width: 240px;
-            flex-shrink: 0;
-        }
+        .sidebar { width: 240px; flex-shrink: 0; }
 
         .sidebar-card {
             background: var(--white);
@@ -145,19 +207,8 @@
         }
 
         .category-link:last-child { border-bottom: none; }
-
-        .category-link:hover {
-            background: var(--blue-light);
-            border-left-color: var(--blue);
-            color: var(--blue);
-        }
-
-        .category-link.active {
-            background: var(--blue-light);
-            border-left-color: var(--blue);
-            color: var(--blue);
-            font-weight: 600;
-        }
+        .category-link:hover { background: var(--blue-light); border-left-color: var(--blue); color: var(--blue); }
+        .category-link.active { background: var(--blue-light); border-left-color: var(--blue); color: var(--blue); font-weight: 600; }
 
         .category-count {
             font-size: 11px;
@@ -169,30 +220,12 @@
             font-weight: 500;
         }
 
-        .category-link.active .category-count {
-            background: var(--blue);
-            color: white;
-        }
+        .category-link.active .category-count { background: var(--blue); color: white; }
 
-        /* ── Page Heading ── */
-        .page-heading {
-            margin-bottom: 18px;
-        }
+        .page-heading { margin-bottom: 18px; }
+        .page-heading h2 { margin: 0; font-size: 1.4rem; font-weight: 700; letter-spacing: -0.3px; }
+        .page-heading p { margin: 4px 0 0; color: var(--text-muted); font-size: 14px; }
 
-        .page-heading h2 {
-            margin: 0;
-            font-size: 1.4rem;
-            font-weight: 700;
-            letter-spacing: -0.3px;
-        }
-
-        .page-heading p {
-            margin: 4px 0 0;
-            color: var(--text-muted);
-            font-size: 14px;
-        }
-
-        /* ── Create Form ── */
         .create-form {
             background: var(--white);
             border-radius: var(--radius);
@@ -210,11 +243,7 @@
             color: var(--text-muted);
         }
 
-        .form-row {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 10px;
-        }
+        .form-row { display: flex; gap: 10px; margin-bottom: 10px; }
 
         .create-form input,
         .create-form select,
@@ -233,19 +262,11 @@
 
         .create-form input:focus,
         .create-form select:focus,
-        .create-form textarea:focus {
-            border-color: var(--blue);
-            background: var(--white);
-        }
+        .create-form textarea:focus { border-color: var(--blue); background: var(--white); }
 
         .create-form select { flex: 0 0 200px; }
         .create-form input[type="text"] { flex: 1; }
-
-        .create-form textarea {
-            resize: vertical;
-            min-height: 90px;
-            margin-bottom: 10px;
-        }
+        .create-form textarea { resize: vertical; min-height: 90px; margin-bottom: 10px; }
 
         .submit-btn {
             background: var(--blue);
@@ -260,10 +281,8 @@
             transition: background 0.2s;
             min-height: 40px;
         }
-
         .submit-btn:hover { background: #005ed4; }
 
-        /* ── Post Cards ── */
         .posts-header {
             font-size: 11px;
             font-weight: 700;
@@ -283,18 +302,8 @@
             transition: box-shadow 0.2s, transform 0.15s;
         }
 
-        .post-card:hover {
-            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-            transform: translateY(-1px);
-        }
-
-        .post-card-top {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-bottom: 8px;
-            flex-wrap: wrap;
-        }
+        .post-card:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.1); transform: translateY(-1px); }
+        .post-card-top { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; flex-wrap: wrap; }
 
         .category-badge {
             display: inline-block;
@@ -316,7 +325,6 @@
             letter-spacing: -0.2px;
             line-height: 1.3;
         }
-
         .post-title-link:hover { color: var(--blue); }
 
         .post-excerpt {
@@ -340,19 +348,8 @@
             padding-top: 10px;
         }
 
-        .post-footer-left {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            flex-wrap: wrap;
-        }
-
-        .author-link {
-            color: var(--blue);
-            text-decoration: none;
-            font-weight: 600;
-        }
-
+        .post-footer-left { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+        .author-link { color: var(--blue); text-decoration: none; font-weight: 600; }
         .author-link:hover { text-decoration: underline; }
 
         .pro-badge {
@@ -369,20 +366,8 @@
         }
 
         .dot { color: var(--border); }
-
-        .post-footer-right {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .view-link {
-            color: var(--blue);
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 13px;
-        }
-
+        .post-footer-right { display: flex; align-items: center; gap: 10px; }
+        .view-link { color: var(--blue); text-decoration: none; font-weight: 600; font-size: 13px; }
         .view-link:hover { text-decoration: underline; }
 
         .delete-btn {
@@ -397,7 +382,6 @@
             font-family: 'DM Sans', sans-serif;
             transition: background 0.2s;
         }
-
         .delete-btn:hover { background: #fecaca; }
 
         .empty-state {
@@ -409,26 +393,121 @@
             box-shadow: var(--shadow);
         }
 
+        /* ── Footer ── */
+        footer {
+            background: #1a1a2e;
+            color: rgba(255,255,255,0.8);
+            margin-top: 60px;
+            padding: 48px 24px 24px;
+        }
+
+        .footer-grid {
+            max-width: 1160px;
+            margin: 0 auto 40px;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 40px;
+        }
+
+        .footer-brand h3 { color: white; font-size: 1.2rem; font-weight: 700; margin: 0 0 10px; }
+        .footer-brand p { font-size: 13px; line-height: 1.6; color: rgba(255,255,255,0.6); margin: 0 0 16px; }
+
+        .footer-social { display: flex; gap: 12px; }
+        .footer-social a { color: rgba(255,255,255,0.6); text-decoration: none; font-size: 18px; transition: color 0.2s; }
+        .footer-social a:hover { color: white; }
+
+        .footer-col h4 { color: white; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin: 0 0 14px; }
+        .footer-col a { display: block; color: rgba(255,255,255,0.6); text-decoration: none; font-size: 13px; margin-bottom: 8px; transition: color 0.2s; cursor: pointer; }
+        .footer-col a:hover { color: white; }
+
+        .footer-bottom {
+            max-width: 1160px;
+            margin: 0 auto;
+            padding-top: 24px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 12px;
+            color: rgba(255,255,255,0.4);
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        /* ── Contact Modal ── */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-overlay.show { display: flex; }
+
+        .modal {
+            background: var(--white);
+            border-radius: var(--radius);
+            padding: 32px;
+            width: 100%;
+            max-width: 480px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            position: relative;
+        }
+
+        .modal h3 { margin: 0 0 20px; font-size: 1.2rem; font-weight: 700; }
+
+        .modal input,
+        .modal select,
+        .modal textarea {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 14px;
+            outline: none;
+            background: var(--bg);
+            margin-bottom: 12px;
+            transition: border-color 0.2s;
+            box-sizing: border-box;
+        }
+
+        .modal input:focus,
+        .modal select:focus,
+        .modal textarea:focus { border-color: var(--blue); background: var(--white); }
+
+        .modal textarea { resize: vertical; min-height: 100px; }
+
+        .modal-close {
+            position: absolute;
+            top: 16px; right: 16px;
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            color: var(--text-muted);
+        }
+
         /* ── Mobile ── */
         @media (max-width: 768px) {
-            .container {
-                flex-direction: column;
-                padding: 0 12px;
-                margin: 16px auto;
-                gap: 16px;
-            }
-
+            .container { flex-direction: column; padding: 0 12px; margin: 16px auto; gap: 16px; }
             .sidebar { width: 100%; order: 2; }
             .main-content { order: 1; }
-
             .form-row { flex-direction: column; }
             .create-form select { flex: unset; }
-
             .header-right .user-info { display: none; }
-
             .post-card { padding: 14px 16px; }
-
             .submit-btn { width: 100%; }
+            .footer-grid { grid-template-columns: 1fr 1fr; gap: 24px; }
+            .banner-wrap { height: 200px; }
+        }
+
+        @media (max-width: 480px) {
+            .footer-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
@@ -449,38 +528,72 @@
                 <span th:text="${userPostCount}">0</span> posts
             </small>
         </div>
-		<a th:href="@{/profile/{username}(username=${#authentication.name})}" class="header-btn">My Profile</a>
-		<a th:if="${#authorization.expression('hasRole(''ADMIN'')')}" 
-		   href="/admin/pins" class="header-btn">🔐 Pins</a>
-		   <a th:if="${#authorization.expression('hasRole(''ADMIN'')')}" 
-		      href="/admin/users" class="header-btn">👥 Users</a>
-			  <a th:if="${#authorization.expression('hasRole(''ADMIN'')')}"
-			     href="/admin/content" class="header-btn">📢 Content</a>
-		<form th:action="@{/logout}" method="post" style="display:inline;">
-		    <button type="submit" class="header-btn">Logout</button>
-		</form>
+        <a th:href="@{/profile/{username}(username=${#authentication.name})}" class="header-btn">My Profile</a>
+        <a th:if="${#authorization.expression('hasRole(''ADMIN'')')}" href="/admin/pins" class="header-btn">🔐 Pins</a>
+        <a th:if="${#authorization.expression('hasRole(''ADMIN'')')}" href="/admin/users" class="header-btn">👥 Users</a>
+        <a th:if="${#authorization.expression('hasRole(''ADMIN'')')}" href="/admin/content" class="header-btn">📢 Content</a>
+        <form th:action="@{/logout}" method="post" style="display:inline;">
+            <button type="submit" class="header-btn">Logout</button>
+        </form>
     </div>
 </header>
 
+<!-- ── Ticker ── -->
+<div class="ticker-wrap" th:if="${announcements != null and !#lists.isEmpty(announcements)}">
+    <div class="ticker-track">
+        <span th:each="a : ${announcements}" class="ticker-item" th:text="${a.message}">Announcement</span>
+    </div>
+</div>
+
+<!-- ── Hero Banner ── -->
+<div class="banner-wrap" th:if="${banners != null and !#lists.isEmpty(banners)}">
+    <div th:each="banner, iterStat : ${banners}"
+         class="banner-slide"
+         th:classappend="${iterStat.first} ? ' active' : ''">
+
+        <div th:if="${banner.type == 'youtube'}" style="width:100%;height:100%;">
+            <iframe class="banner-youtube"
+                    th:src="'https://www.youtube.com/embed/' + ${banner.youtubeVideoId} + '?autoplay=0&mute=1'"
+                    allowfullscreen></iframe>
+        </div>
+
+        <div th:if="${banner.type == 'custom'}" class="banner-custom">
+            <h3 th:text="${banner.title}">Banner Title</h3>
+            <div th:if="${banner.customContent != null}" th:utext="${banner.customContent}"></div>
+            <a th:if="${banner.link != null}" th:href="${banner.link}" target="_blank">Learn More →</a>
+        </div>
+    </div>
+
+    <div class="banner-dots" th:if="${#lists.size(banners) > 1}">
+        <div th:each="banner, iterStat : ${banners}"
+             class="banner-dot"
+             th:classappend="${iterStat.first} ? ' active' : ''"
+             th:onclick="'goToSlide(' + ${iterStat.index} + ')'"></div>
+    </div>
+</div>
+
 <div class="container">
 
-    <!-- ── Main Content ── -->
     <div class="main-content">
+
+        <div th:if="${param.contacted}"
+             style="background:#dcfce7;color:#166534;padding:12px 16px;border-radius:8px;margin-bottom:16px;font-size:14px;">
+            ✅ Your message has been sent! We'll get back to you soon.
+        </div>
 
         <div class="page-heading">
             <h2 th:if="${selectedCategory == 'All'}">Welcome to NattyPro.Life 👊</h2>
             <h2 th:if="${selectedCategory != 'All'}" th:text="${selectedCategory}">Category</h2>
             <p th:if="${selectedCategory == 'All'}">A forum for the natural bodybuilding community.</p>
-			<form action="/search" method="get" style="margin-top: 12px; display: flex; gap: 8px;">
-			    <input type="text" name="query" placeholder="Search posts, topics, authors..."
-			           style="flex: 1; padding: 10px 14px; border: 1px solid var(--border);
-			                  border-radius: 8px; font-family: 'DM Sans', sans-serif;
-			                  font-size: 14px; outline: none; background: var(--white);">
-			    <button type="submit" class="submit-btn">Search</button>
-			</form>
+            <form action="/search" method="get" style="margin-top: 12px; display: flex; gap: 8px;">
+                <input type="text" name="query" placeholder="Search posts, topics, authors..."
+                       style="flex: 1; padding: 10px 14px; border: 1px solid var(--border);
+                              border-radius: 8px; font-family: 'DM Sans', sans-serif;
+                              font-size: 14px; outline: none; background: var(--white);">
+                <button type="submit" class="submit-btn">Search</button>
+            </form>
         </div>
 
-        <!-- Create Post Form -->
         <div class="create-form">
             <h3>Start a Discussion</h3>
             <form th:action="@{/create}" th:object="${newPost}" method="post">
@@ -496,7 +609,6 @@
             </form>
         </div>
 
-        <!-- Posts List -->
         <div class="posts-header">
             Recent Posts
             <span th:if="${selectedCategory != 'All'}" th:text="'in ' + ${selectedCategory}"></span>
@@ -541,51 +653,140 @@
     <div class="sidebar">
         <div class="sidebar-card">
             <div class="sidebar-title">Categories</div>
-
             <a href="/" class="category-link" th:classappend="${selectedCategory == 'All'} ? 'active' : ''">
-                All Posts
-                <span class="category-count" th:text="${totalCount}">0</span>
+                All Posts <span class="category-count" th:text="${totalCount}">0</span>
             </a>
             <a href="/?category=Training" class="category-link" th:classappend="${selectedCategory == 'Training'} ? 'active' : ''">
-                💪 Training
-                <span class="category-count" th:text="${trainingCount}">0</span>
+                💪 Training <span class="category-count" th:text="${trainingCount}">0</span>
             </a>
             <a href="/?category=Nutrition" class="category-link" th:classappend="${selectedCategory == 'Nutrition'} ? 'active' : ''">
-                🍎 Nutrition
-                <span class="category-count" th:text="${nutritionCount}">0</span>
+                🍎 Nutrition <span class="category-count" th:text="${nutritionCount}">0</span>
             </a>
             <a href="/?category=Recovery" class="category-link" th:classappend="${selectedCategory == 'Recovery'} ? 'active' : ''">
-                😴 Recovery
-                <span class="category-count" th:text="${recoveryCount}">0</span>
+                😴 Recovery <span class="category-count" th:text="${recoveryCount}">0</span>
             </a>
             <a href="/?category=Mindset" class="category-link" th:classappend="${selectedCategory == 'Mindset'} ? 'active' : ''">
-                🧠 Mindset
-                <span class="category-count" th:text="${mindsetCount}">0</span>
+                🧠 Mindset <span class="category-count" th:text="${mindsetCount}">0</span>
             </a>
             <a href="/?category=Prep Files" class="category-link" th:classappend="${selectedCategory == 'Prep Files'} ? 'active' : ''">
-                📁 Prep Files
-                <span class="category-count" th:text="${prepFilesCount}">0</span>
+                📁 Prep Files <span class="category-count" th:text="${prepFilesCount}">0</span>
             </a>
             <a href="/?category=Coaches Corner" class="category-link" th:classappend="${selectedCategory == 'Coaches Corner'} ? 'active' : ''">
-                🎓 Coaches Corner
-                <span class="category-count" th:text="${coachesCornerCount}">0</span>
+                🎓 Coaches Corner <span class="category-count" th:text="${coachesCornerCount}">0</span>
             </a>
             <a href="/?category=Self Promotion" class="category-link" th:classappend="${selectedCategory == 'Self Promotion'} ? 'active' : ''">
-                📣 Self Promotion
-                <span class="category-count" th:text="${selfPromotionCount}">0</span>
+                📣 Self Promotion <span class="category-count" th:text="${selfPromotionCount}">0</span>
             </a>
             <a href="/?category=Random Side Quests" class="category-link" th:classappend="${selectedCategory == 'Random Side Quests'} ? 'active' : ''">
-                🎲 Random Side Quests
-                <span class="category-count" th:text="${randomSideQuestsCount}">0</span>
+                🎲 Random Side Quests <span class="category-count" th:text="${randomSideQuestsCount}">0</span>
             </a>
         </div>
+
+        <div style="margin-top: 16px;">
+            <div class="sidebar-card">
+                <div class="sidebar-title">Chat Rooms</div>
+                <a href="/chat/global" class="category-link">💬 Global Chat</a>
+                <a href="/chat/training" class="category-link">💪 Training Chat</a>
+                <a href="/chat/nutrition" class="category-link">🍎 Nutrition Chat</a>
+                <a href="/chat/recovery" class="category-link">😴 Recovery Chat</a>
+                <a href="/chat/mindset" class="category-link">🧠 Mindset Chat</a>
+            </div>
+        </div>
     </div>
-	<div style="margin-top: 16px; border-top: 1px solid var(--border); padding-top: 16px;">
-	    <div class="sidebar-title">Chat Rooms</div>
-	    <a href="/chat/global" class="category-link">💬 Global Chat</a>
-	    <a href="/chat/training" class="category-link">💪 Training Chat</a>
-	    <a href="/chat/nutrition" class="category-link">🍎 Nutrition Chat</a>
-	</div>
+
 </div>
+
+<!-- ── Footer ── -->
+<footer>
+    <div class="footer-grid">
+        <div class="footer-brand">
+            <h3>NattyPro.Life</h3>
+            <p>The community for serious natural bodybuilders. Drug-free, knowledge-driven, competition-ready.</p>
+            <div class="footer-social">
+                <a href="#" title="Instagram">📷</a>
+                <a href="#" title="YouTube">▶️</a>
+                <a href="#" title="Twitter">🐦</a>
+            </div>
+        </div>
+        <div class="footer-col">
+            <h4>Forum</h4>
+            <a href="/?category=Training">Training</a>
+            <a href="/?category=Nutrition">Nutrition</a>
+            <a href="/?category=Recovery">Recovery</a>
+            <a href="/?category=Mindset">Mindset</a>
+            <a href="/?category=Prep Files">Prep Files</a>
+        </div>
+        <div class="footer-col">
+            <h4>Community</h4>
+            <a href="/chat/global">Live Chat</a>
+            <a onclick="document.getElementById('contactModal').classList.add('show'); return false;">Contact Us</a>
+            <a href="#">Sponsors</a>
+            <a onclick="document.getElementById('contactModal').classList.add('show'); return false;">Submit a Banner</a>
+        </div>
+        <div class="footer-col">
+            <h4>Legal</h4>
+            <a href="#">Terms of Service</a>
+            <a href="#">Privacy Policy</a>
+            <a href="#">Community Guidelines</a>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <span>© 2026 NattyPro.Life. All rights reserved.</span>
+        <span>Built for the natural bodybuilding community 💪</span>
+    </div>
+</footer>
+
+<!-- ── Contact Modal ── -->
+<div class="modal-overlay" id="contactModal" onclick="if(event.target===this)this.classList.remove('show')">
+    <div class="modal">
+        <button class="modal-close" onclick="document.getElementById('contactModal').classList.remove('show')">✕</button>
+        <h3>Contact Us</h3>
+        <form action="/contact/submit" method="post">
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+            <input type="text" name="name" placeholder="Your name" required/>
+            <input type="text" name="email" placeholder="Your email" required/>
+            <select name="subject" required>
+                <option value="">Select subject...</option>
+                <option value="General Inquiry">General Inquiry</option>
+                <option value="Sponsorship">Sponsorship</option>
+                <option value="Banner Submission">Banner Submission</option>
+                <option value="PRO Badge Request">PRO Badge Request</option>
+                <option value="Report a User">Report a User</option>
+                <option value="Technical Issue">Technical Issue</option>
+                <option value="Other">Other</option>
+            </select>
+            <textarea name="message" placeholder="Your message..." required></textarea>
+            <button type="submit" class="submit-btn" style="width:100%;">Send Message</button>
+        </form>
+    </div>
+</div>
+
+<script>
+const slides = document.querySelectorAll('.banner-slide');
+const dots = document.querySelectorAll('.banner-dot');
+let current = 0;
+let bannerTimer;
+
+function goToSlide(index) {
+    slides[current].classList.remove('active');
+    if (dots[current]) dots[current].classList.remove('active');
+    current = index;
+    slides[current].classList.add('active');
+    if (dots[current]) dots[current].classList.add('active');
+    resetTimer();
+}
+
+function nextSlide() {
+    goToSlide((current + 1) % slides.length);
+}
+
+function resetTimer() {
+    clearInterval(bannerTimer);
+    if (slides.length > 1) bannerTimer = setInterval(nextSlide, 6000);
+}
+
+if (slides.length > 1) bannerTimer = setInterval(nextSlide, 6000);
+</script>
+
 </body>
 </html>
