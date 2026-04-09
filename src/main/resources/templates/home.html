@@ -469,6 +469,13 @@
             <h2 th:if="${selectedCategory == 'All'}">Welcome to NattyPro.Life 👊</h2>
             <h2 th:if="${selectedCategory != 'All'}" th:text="${selectedCategory}">Category</h2>
             <p th:if="${selectedCategory == 'All'}">A forum for the natural bodybuilding community.</p>
+			<form action="/search" method="get" style="margin-top: 12px; display: flex; gap: 8px;">
+			    <input type="text" name="query" placeholder="Search posts, topics, authors..."
+			           style="flex: 1; padding: 10px 14px; border: 1px solid var(--border);
+			                  border-radius: 8px; font-family: 'DM Sans', sans-serif;
+			                  font-size: 14px; outline: none; background: var(--white);">
+			    <button type="submit" class="submit-btn">Search</button>
+			</form>
         </div>
 
         <!-- Create Post Form -->
@@ -508,7 +515,7 @@
                     <span>By</span>
                     <a th:href="@{/profile/{username}(username=${post.author})}"
                        class="author-link" th:text="${post.author}">Author</a>
-                    <span class="pro-badge" <span class="pro-badge" th:if="${proStatusMap[post.author]}">PRO</span>>PRO</span>
+                    <span class="pro-badge" th:if="${proStatusMap[post.author]}">PRO</span>>PRO</span>
                     <span class="dot">•</span>
                     <span th:if="${post.createdAt}"
                           th:text="${#temporals.format(post.createdAt, 'MMM dd, yyyy')}">Date</span>

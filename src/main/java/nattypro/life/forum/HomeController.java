@@ -209,6 +209,57 @@ public class HomeController {
         
         return "post";
     }
+    
+    @GetMapping("/search")
+    public String search(@RequestParam String query, Model model, Authentication authentication) {
+        
+        List<Post> results = postRepository.findAll().stream()
+            .filter(p -> 
+                p.getTitle().toLowerCase().contains(query.toLowerCase()) ||
+                p.getContent().toLowerCase().contains(query.toLowerCase()) ||
+                p.getAuthor().toLowerCase().contains(query.toLowerCase())
+            )
+            .sorted((a, b) -> b.getCreatedAt().compareTo(a.getCreatedAt()))
+            .collect(Collectors.toList());
+
+        // PRO status map for results
+        Map<String, Object> proStatusMap = results.stream()
+            .collect(Collectors.toMap(
+                Post::getAuthor,
+                p -> {
+                    User u = userRepository.findByUsername(p.getAuthor()).orElse(null);
+                    return u != null && Boolean.TRUE.equals(u.getVerifiedNattyPro());
+                },
+                (a, b) -> a
+            ));
+
+        model.addAttribute("results", results);
+        model.addAttribute("query", query);
+        model.addAttribute("proStatusMap", proStatusMap);
+        model.addAttribute("resultCount", results.size());
+
+        // User stats for header
+        if (authentication != null) {
+            User currentUser = userRepository.findByUsername(authentication.getName()).orElse(null);
+            model.addAttribute("currentUser", currentUser);
+            long userPostCount = postRepository.findAll().stream()
+                .filter(p -> p.getAuthor().equals(authentication.getName()))
+                .count();
+            String userRank;
+            String rankEmoji;
+            if (userPostCount == 0) { userRank = "Lurker"; rankEmoji = "👀"; }
+            else if (userPostCount <= 2) { userRank = "Newb"; rankEmoji = "🌱"; }
+            else if (userPostCount <= 7) { userRank = "Member"; rankEmoji = "💪"; }
+            else if (userPostCount <= 14) { userRank = "Regular"; rankEmoji = "⭐"; }
+            else if (userPostCount <= 29) { userRank = "Veteran"; rankEmoji = "🔥"; }
+            else { userRank = "Legend"; rankEmoji = "👑"; }
+            model.addAttribute("userPostCount", userPostCount);
+            model.addAttribute("userRank", userRank);
+            model.addAttribute("rankEmoji", rankEmoji);
+        }
+
+        return "search-results";
+    }
 
     @PostMapping("/post/{id}/comment")
     public String addComment(@PathVariable Long id, @RequestParam String content, Authentication authentication) {
