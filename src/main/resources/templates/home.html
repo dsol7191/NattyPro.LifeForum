@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
@@ -507,7 +508,7 @@
                     <span>By</span>
                     <a th:href="@{/profile/{username}(username=${post.author})}"
                        class="author-link" th:text="${post.author}">Author</a>
-                    <span class="pro-badge" th:if="${post.author == 'DanielSolis'}">PRO</span>
+                    <span class="pro-badge" <span class="pro-badge" th:if="${proStatusMap[post.author]}">PRO</span>>PRO</span>
                     <span class="dot">•</span>
                     <span th:if="${post.createdAt}"
                           th:text="${#temporals.format(post.createdAt, 'MMM dd, yyyy')}">Date</span>

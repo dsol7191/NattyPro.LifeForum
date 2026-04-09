@@ -1,5 +1,48 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+	<script>
+	function linkify(text) {
+	    const urlRegex = /(https?:\/\/[^\s]+)/g;
+	    return text.replace(urlRegex, '<a href="$1" target="_blank" style="color: #007bff; word-break: break-all;">$1</a>');
+	}
+
+	function embedify(text) {
+	    // YouTube embeds
+	    const youtubeRegex = /https?:\/\/(?:www\.)?(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/g;
+	    text = text.replace(youtubeRegex, function(match, videoId) {
+	        return '<div style="position: relative; padding-bottom: 56.25%; height: 0; margin: 15px 0;"><iframe style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;" src="https://www.youtube.com/embed/' + videoId + '" frameborder="0" allowfullscreen></iframe></div>';
+	    });
+	    
+	    // Twitter embeds
+	    const twitterRegex = /https?:\/\/(?:www\.)?(?:twitter\.com|x\.com)\/\w+\/status\/(\d+)/g;
+	    text = text.replace(twitterRegex, '<a href="$&" target="_blank" style="color: #007bff;">$&</a>');
+	    
+	    return text;
+	}
+
+	window.onload = function() {
+	    // Linkify and embed post content
+	    const postContent = document.querySelector('.post-content');
+	    if (postContent) {
+	        let content = postContent.textContent;
+	        content = embedify(content);
+	        content = linkify(content);
+	        postContent.innerHTML = content;
+	    }
+	    
+	    // Linkify and embed comments
+	    document.querySelectorAll('.comment-content').forEach(function(element) {
+	        let content = element.textContent;
+	        content = embedify(content);
+	        content = linkify(content);
+	        element.innerHTML = content;
+	    });
+	};
+	</script>
+	</head>
+
+
+
 <head>
     <title th:text="${post.title}">Post</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
