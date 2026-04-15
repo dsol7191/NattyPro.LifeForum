@@ -33,3 +33,8 @@ build/
 .vscode/
 
 application.properties
+
+forumdb.mv.db
+forumdb.trace.db
+UpLoads/
+bin/
