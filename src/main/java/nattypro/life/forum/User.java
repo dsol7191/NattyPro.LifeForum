@@ -94,6 +94,18 @@ public class User {
     @Column(name = "chat_suspended")
     private Boolean chatSuspended = false;
     
+    @Column(name = "reset_token")
+    private String resetToken;
+
+    @Column(name = "reset_token_expiry")
+    private LocalDateTime resetTokenExpiry;
+
+    @Column(name = "email_confirmed")
+    private Boolean emailConfirmed = false;
+
+    @Column(name = "confirmation_token")
+    private String confirmationToken;
+    
     // ========== CONSTRUCTORS ==========
     
     public User() { 
@@ -129,7 +141,6 @@ public class User {
     public Boolean getChatSuspended() { return chatSuspended; }
     public void setChatSuspended(Boolean chatSuspended) { this.chatSuspended = chatSuspended; }
 
-    
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
     
@@ -144,6 +155,18 @@ public class User {
     
     public String getRole() { return role; }
     public void setRole(String role) { this.role = role; }
+    
+    public String getResetToken() { return resetToken; }
+    public void setResetToken(String resetToken) { this.resetToken = resetToken; }
+
+    public LocalDateTime getResetTokenExpiry() { return resetTokenExpiry; }
+    public void setResetTokenExpiry(LocalDateTime resetTokenExpiry) { this.resetTokenExpiry = resetTokenExpiry; }
+
+    public Boolean getEmailConfirmed() { return emailConfirmed; }
+    public void setEmailConfirmed(Boolean emailConfirmed) { this.emailConfirmed = emailConfirmed; }
+
+    public String getConfirmationToken() { return confirmationToken; }
+    public void setConfirmationToken(String confirmationToken) { this.confirmationToken = confirmationToken; }
     
     // Profile field getters/setters
     

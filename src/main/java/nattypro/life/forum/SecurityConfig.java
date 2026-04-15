@@ -35,13 +35,16 @@ public class SecurityConfig {
             .authenticationProvider(authenticationProvider())
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers(
-                    "/register",
-                    "/register/age",
-                    "/register/rules",
-                    "/login",
-                    "/h2-console/**",
-                    "/ws/**",
-                    "/admin/**"
+                		 "/register",
+                		    "/register/age",
+                		    "/register/rules",
+                		    "/login",
+                		    "/forgot-password",
+                		    "/reset-password",
+                		    "/confirm-email",
+                		    "/h2-console/**",
+                		    "/ws/**",
+                		    "/admin/**"
                 ).permitAll()
                 .anyRequest().authenticated()
             )

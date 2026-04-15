@@ -1,20 +1,25 @@
 package nattypro.life.forum;
 
+import java.util.UUID;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+
 import jakarta.servlet.http.HttpSession;
+
 
 @Controller
 public class AuthController {
 
     @Autowired
     private UserService userService;
-
-    // ── Step 1: Show registration form ──
+    @Autowired private UserRepository userRepository;
+    @Autowired private EmailService emailService;
+    
     @GetMapping("/register")
     public String showRegisterForm() {
         return "register";
@@ -106,6 +111,13 @@ public class AuthController {
         session.removeAttribute("reg_username");
         session.removeAttribute("reg_password");
         session.removeAttribute("reg_email");
+        
+     // Send email confirmation
+        String confirmToken = UUID.randomUUID().toString();
+        User newUser = userRepository.findByUsername(username).orElseThrow();
+        newUser.setConfirmationToken(confirmToken);
+        userRepository.save(newUser);
+        emailService.sendEmailConfirmation(email, username, confirmToken);
 
         return "redirect:/login?registered=true";
     }
