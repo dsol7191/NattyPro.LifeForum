@@ -38,3 +38,7 @@ forumdb.mv.db
 forumdb.trace.db
 UpLoads/
 bin/
+
+bin/
+forumdb.mv.db
+forumdb.trace.db

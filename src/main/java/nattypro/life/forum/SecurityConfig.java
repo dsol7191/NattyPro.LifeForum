@@ -44,9 +44,15 @@ public class SecurityConfig {
                 		    "/confirm-email",
                 		    "/h2-console/**",
                 		    "/ws/**",
-                		    "/admin/**"
+                		    "/admin/**",
+                		    "/privacy-policy",
+                		    "/terms-of-service",
+                		    "/community-guidelines"
                 ).permitAll()
                 .anyRequest().authenticated()
+                
+                
+                
             )
             .formLogin(form -> form
                 .loginPage("/login")
