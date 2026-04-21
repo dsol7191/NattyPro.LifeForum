@@ -47,7 +47,9 @@ public class SecurityConfig {
                 		    "/admin/**",
                 		    "/privacy-policy",
                 		    "/terms-of-service",
-                		    "/community-guidelines"
+                		    "/community-guidelines",
+                		    "/sponsors"
+                		    
                 ).permitAll()
                 .anyRequest().authenticated()
                 
@@ -67,7 +69,12 @@ public class SecurityConfig {
                 .ignoringRequestMatchers("/h2-console/**", "/ws/**")
             )
             .headers(headers -> headers
-                .frameOptions(frame -> frame.sameOrigin())
+            	    .contentSecurityPolicy(csp -> csp
+            	        .policyDirectives("default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' fonts.googleapis.com; font-src fonts.gstatic.com; img-src 'self' i.ytimg.com data:; frame-src www.youtube.com")
+            	    )
+            	    .frameOptions(frame -> frame.sameOrigin()
+            	)
+          
             );
 
         return http.build();

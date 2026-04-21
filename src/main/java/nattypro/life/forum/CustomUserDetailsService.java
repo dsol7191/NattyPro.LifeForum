@@ -18,6 +18,11 @@ public class CustomUserDetailsService implements UserDetailsService {
         User user = userRepository.findByUsername(username)
             .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
         
+        // Enforce email confirmation
+        if (user.getEmailConfirmed() == null || !user.getEmailConfirmed()) {
+            throw new UsernameNotFoundException("Email not confirmed. Please check your inbox.");
+        }
+        
         UserBuilder builder = org.springframework.security.core.userdetails.User.withUsername(username);
         builder.password(user.getPassword());
         builder.roles(user.getRole()); // Use role from database

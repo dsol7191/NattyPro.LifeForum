@@ -141,26 +141,7 @@
         .banner-custom h3 { margin: 12px 0 8px; font-size: 1.4rem; font-weight: 700; }
         .banner-custom a { color: white; text-decoration: underline; font-weight: 600; }
 
-        .banner-dots {
-            position: absolute;
-            bottom: 12px;
-            left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            gap: 6px;
-            z-index: 10;
-        }
-
-        .banner-dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: rgba(255,255,255,0.4);
-            cursor: pointer;
-            transition: background 0.2s;
-        }
-
-        .banner-dot.active { background: white; }
+  
 
         /* ── Layout ── */
         .container {
@@ -593,15 +574,20 @@
         </div>
     </div>
 
-    <!-- Dots -->
-    <div class="banner-dots">
-        <div th:each="banner, iterStat : ${banners}"
-             class="banner-dot"
-             th:onclick="'goToSlide(' + ${iterStat.index} + ')'"></div>
-        <div th:each="video, iterStat : ${youtubeVideos}"
-             class="banner-dot"
-             th:onclick="'goToSlide(' + ${iterStat.index + (banners != null ? #lists.size(banners) : 0)} + ')'"></div>
-    </div>
+	<!-- Previous arrow -->
+	    <button onclick="goToSlide((current - 1 + slides.length) % slides.length)"
+	            style="position:absolute; left:16px; top:50%; transform:translateY(-50%);
+	                   background:rgba(0,0,0,0.5); color:white; border:none; border-radius:50%;
+	                   width:40px; height:40px; font-size:20px; cursor:pointer; z-index:10;">‹</button>
+
+	    <!-- Next arrow -->
+	    <button onclick="goToSlide((current + 1) % slides.length)"
+	            style="position:absolute; right:16px; top:50%; transform:translateY(-50%);
+	                   background:rgba(0,0,0,0.5); color:white; border:none; border-radius:50%;
+	                   width:40px; height:40px; font-size:20px; cursor:pointer; z-index:10;">›</button>
+
+	</div> <!-- closing banner-wrap -->
+	
 </div>
 <div class="container">
 
@@ -751,7 +737,7 @@
             <h4>Community</h4>
             <a href="/chat/global">Live Chat</a>
             <a onclick="document.getElementById('contactModal').classList.add('show'); return false;">Contact Us</a>
-            <a href="#">Sponsors</a>
+          <a href="/sponsors">Sponsors</a>
             <a onclick="document.getElementById('contactModal').classList.add('show'); return false;">Submit a Banner</a>
 			
 			<a href="/register/rules">Community Guidelines</a>
@@ -796,30 +782,27 @@
 </div>
 
 <script>
-const slides = document.querySelectorAll('.banner-slide');
-const dots = document.querySelectorAll('.banner-dot');
-let current = 0;
-let bannerTimer;
+	const slides = document.querySelectorAll('.banner-slide');
+	let current = 0;
+	let bannerTimer;
 
-function goToSlide(index) {
-    slides[current].classList.remove('active');
-    if (dots[current]) dots[current].classList.remove('active');
-    current = index;
-    slides[current].classList.add('active');
-    if (dots[current]) dots[current].classList.add('active');
-    resetTimer();
-}
+	function goToSlide(index) {
+	    slides[current].classList.remove('active');
+	    current = index;
+	    slides[current].classList.add('active');
+	    resetTimer();
+	}
 
-function nextSlide() {
-    goToSlide((current + 1) % slides.length);
-}
+	function nextSlide() {
+	    goToSlide((current + 1) % slides.length);
+	}
 
-function resetTimer() {
-    clearInterval(bannerTimer);
-    if (slides.length > 1) bannerTimer = setInterval(nextSlide, 6000);
-}
+	function resetTimer() {
+	    clearInterval(bannerTimer);
+	    if (slides.length > 1) bannerTimer = setInterval(nextSlide, 6000);
+	}
 
-if (slides.length > 1) bannerTimer = setInterval(nextSlide, 6000);
+	if (slides.length > 1) bannerTimer = setInterval(nextSlide, 6000);
 </script>
 
 </body>

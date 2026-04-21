@@ -62,27 +62,24 @@ public class HomeController {
     	        .limit(5)
     	        .collect(Collectors.toList());
     	    model.addAttribute("selectedCategory", "All");
-    	    
-    	 // Build a map of username -> verifiedNattyPro for all post authors
-    	    Map<String, Object> proStatusMap = posts.stream()
-    	    	    .collect(Collectors.toMap(
-    	    	        Post::getAuthor,
-    	    	        p -> {
-    	    	            User u = userRepository.findByUsername(p.getAuthor()).orElse(null);
-    	    	            return u != null && u.getVerifiedNattyPro() != null && u.getVerifiedNattyPro();
-    	    	        },
-    	    	        (a, b) -> a
-    	    	    ));
-    	    	model.addAttribute("proStatusMap", proStatusMap);
-    	    	// PRO status for post author
-    	    	
     	}
-        
-        
-        model.addAttribute("posts", posts);
+
+    	// Build proStatusMap OUTSIDE if/else
+    	Map<String, Object> proStatusMap = posts.stream()
+    	    .collect(Collectors.toMap(
+    	        Post::getAuthor,
+    	        p -> {
+    	            User u = userRepository.findByUsername(p.getAuthor()).orElse(null);
+    	            return u != null && u.getVerifiedNattyPro() != null && u.getVerifiedNattyPro();
+    	        },
+    	        (a, b) -> a
+    	    ));
+    	model.addAttribute("proStatusMap", proStatusMap);
+
+    	model.addAttribute("posts", posts);
         model.addAttribute("newPost", new Post());
         
-        // Add category counts for sidebar
+       
      // Add category counts for sidebar
         model.addAttribute("trainingCount", postRepository.countByCategory("Training"));
         model.addAttribute("nutritionCount", postRepository.countByCategory("Nutrition"));
@@ -238,18 +235,17 @@ public class HomeController {
             )
             .sorted((a, b) -> b.getCreatedAt().compareTo(a.getCreatedAt()))
             .collect(Collectors.toList());
-
-        // PRO status map for results
         Map<String, Object> proStatusMap = results.stream()
-            .collect(Collectors.toMap(
-                Post::getAuthor,
-                p -> {
-                    User u = userRepository.findByUsername(p.getAuthor()).orElse(null);
-                    return u != null && Boolean.TRUE.equals(u.getVerifiedNattyPro());
-                },
-                (a, b) -> a
-            ));
-
+        	    .collect(Collectors.toMap(
+        	        Post::getAuthor,
+        	        p -> {
+        	            User u = userRepository.findByUsername(p.getAuthor()).orElse(null);
+        	            return u != null && u.getVerifiedNattyPro() != null && u.getVerifiedNattyPro();
+        	        },
+        	        (a, b) -> a
+        	    ));
+   
+        
         model.addAttribute("results", results);
         model.addAttribute("query", query);
         model.addAttribute("proStatusMap", proStatusMap);

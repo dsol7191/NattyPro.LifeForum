@@ -20,6 +20,7 @@ public class AuthController {
     @Autowired private UserRepository userRepository;
     @Autowired private EmailService emailService;
     
+    
     @GetMapping("/register")
     public String showRegisterForm() {
         return "register";
@@ -113,14 +114,20 @@ public class AuthController {
         session.removeAttribute("reg_email");
         
      // Send email confirmation
-        String confirmToken = UUID.randomUUID().toString();
-        User newUser = userRepository.findByUsername(username).orElseThrow();
-        newUser.setConfirmationToken(confirmToken);
-        userRepository.save(newUser);
-        emailService.sendEmailConfirmation(email, username, confirmToken);
+     // Send email confirmation
+        try {
+            String confirmToken = UUID.randomUUID().toString();
+            User newUser = userRepository.findByUsername(username).orElseThrow();
+            newUser.setConfirmationToken(confirmToken);
+            userRepository.save(newUser);
+            emailService.sendEmailConfirmation(email, username, confirmToken);
+        } catch (Exception e) {
+            System.err.println("Failed to send confirmation email: " + e.getMessage());
+        }  // ← close catch here
 
-        return "redirect:/login?registered=true";
+        return "redirect:/login?registered=true";  // ← then return here
     }
+    
 
     // ── Login ──
     @GetMapping("/login")
@@ -140,5 +147,9 @@ public class AuthController {
     @GetMapping("/community-guidelines")
     public String communityGuidelines() {
         return "community-guidelines";
+    }
+    @GetMapping("/sponsors")
+    public String sponsors() {
+        return "sponsors";
     }
 }
