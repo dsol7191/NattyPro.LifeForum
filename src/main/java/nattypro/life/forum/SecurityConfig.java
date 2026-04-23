@@ -69,9 +69,9 @@ public class SecurityConfig {
                 .ignoringRequestMatchers("/h2-console/**", "/ws/**")
             )
             .headers(headers -> headers
-            	    .contentSecurityPolicy(csp -> csp
-            	        .policyDirectives("default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' fonts.googleapis.com; font-src fonts.gstatic.com; img-src 'self' i.ytimg.com data:; frame-src www.youtube.com")
-            	    )
+            		.contentSecurityPolicy(csp -> csp
+            			    .policyDirectives("default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' fonts.googleapis.com cdnjs.cloudflare.com; font-src fonts.gstatic.com cdnjs.cloudflare.com; img-src 'self' i.ytimg.com data:; frame-src www.youtube.com")
+            			)
             	    .frameOptions(frame -> frame.sameOrigin()
             	)
           
