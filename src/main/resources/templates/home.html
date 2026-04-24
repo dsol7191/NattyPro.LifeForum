@@ -629,7 +629,6 @@
 
 	</div> <!-- closing banner-wrap -->
 	
-</div>
 <div class="container">
 
     <div class="main-content">
@@ -652,6 +651,21 @@
             </form>
         </div>
 
+        <!-- CREATE FORM - only shows in category pages -->
+        <div class="create-form" th:if="${selectedCategory != 'All'}">
+            <h3>Start a Discussion</h3>
+            <form th:action="@{/create}" th:object="${newPost}" method="post">
+                <div class="form-row">
+                    <input type="text" th:field="*{title}" placeholder="Post title..." required/>
+                    <select th:field="*{category}" required>
+                        <option value="">Select category...</option>
+                        <option th:each="cat : ${categories}" th:value="${cat}" th:text="${cat}"></option>
+                    </select>
+                </div>
+                <textarea th:field="*{content}" placeholder="Share your thoughts, questions, or knowledge..." required></textarea>
+                <button type="submit" class="submit-btn">Post</button>
+            </form>
+        </div>
 
         <div class="posts-header">
             Recent Posts
@@ -767,8 +781,6 @@
             <a onclick="document.getElementById('contactModal').classList.add('show'); return false;">Contact Us</a>
           <a href="/sponsors">Sponsors</a>
             <a onclick="document.getElementById('contactModal').classList.add('show'); return false;">Submit a Banner</a>
-			
-			<a href="/register/rules">Community Guidelines</a>
 			<a href="https://buymeacoffee.com/YOUR_USERNAME" target="_blank">☕ Buy Me a Coffee</a>
         </div>
         <div class="footer-col">
