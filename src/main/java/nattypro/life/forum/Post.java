@@ -20,8 +20,12 @@ public class Post {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
+    @Column(length = 500)
     private String title;
+
+    @Column(length = 10000)
     private String content;
+    
     private String author;
     private String category;
     
