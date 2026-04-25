@@ -178,6 +178,46 @@
 	        
 	        return "redirect:/";
 	    }
+	    
+	    @GetMapping("/post/{id}/edit")
+	    public String editPostForm(@PathVariable Long id, Model model, Authentication authentication) {
+	        Post post = postRepository.findById(id).orElse(null);
+	        if (post == null) return "redirect:/";
+
+	        // Only author or admin can edit
+	        boolean isAdmin = authentication.getAuthorities().stream()
+	            .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
+	        if (!post.getAuthor().equals(authentication.getName()) && !isAdmin) {
+	            return "redirect:/";
+	        }
+
+	        model.addAttribute("post", post);
+	        model.addAttribute("categories", CATEGORIES);
+	        return "edit-post";
+	    }
+
+	    @PostMapping("/post/{id}/edit")
+	    public String editPostSubmit(@PathVariable Long id,
+	                                 @RequestParam String title,
+	                                 @RequestParam String content,
+	                                 @RequestParam String category,
+	                                 Authentication authentication) {
+	        Post post = postRepository.findById(id).orElse(null);
+	        if (post == null) return "redirect:/";
+
+	        boolean isAdmin = authentication.getAuthorities().stream()
+	            .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
+	        if (!post.getAuthor().equals(authentication.getName()) && !isAdmin) {
+	            return "redirect:/";
+	        }
+
+	        post.setTitle(title);
+	        post.setContent(content);
+	        post.setCategory(category);
+	        postRepository.save(post);
+
+	        return "redirect:/post/" + id;
+	    }
 	
 	    @GetMapping("/post/{id}")
 	    public String viewPost(@PathVariable Long id, Model model, Authentication authentication) {

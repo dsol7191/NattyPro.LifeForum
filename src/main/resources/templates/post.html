@@ -452,6 +452,11 @@
                 <span class="dot">•</span>
                 <span th:if="${post.createdAt}"
                       th:text="${#temporals.format(post.createdAt, 'MMM dd, yyyy hh:mm a')}">Date</span>
+                <span th:if="${currentUser != null and (currentUser.username == post.author or #authorization.expression('hasRole(''ADMIN'')'))}">
+                    <span class="dot">•</span>
+                    <a th:href="@{/post/{id}/edit(id=${post.id})}"
+                       style="color:var(--blue); text-decoration:none; font-weight:600; font-size:13px;">✏️ Edit</a>
+                </span>
             </div>
         </div>
     </div>
