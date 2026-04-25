@@ -512,22 +512,24 @@ function toggleVote(btn) {
         btn.querySelector('.vote-count').textContent = data.voteCount;
         btn.classList.toggle('voted', data.voted);
     });
-	function toggleFollow(btn) {
-	    const postId = btn.dataset.postId;
-	    fetch(`/follow/post/${postId}`, {
-	        method: 'POST',
-	        headers: {
-	            'X-CSRF-Token': document.querySelector('meta[name="_csrf"]').content,
-	            'Content-Type': 'application/json'
-	        }
-	    })
-	    .then(res => res.json())
-	    .then(data => {
-	        if (data.error) return;
-	        btn.classList.toggle('following', data.following);
-	        btn.querySelector('span').textContent = data.following ? '🔔 Following' : '🔕 Follow Thread';
-	    });
-	}
+}
+
+function toggleFollow(btn) {
+    const postId = btn.dataset.postId;
+    fetch(`/follow/post/${postId}`, {
+        method: 'POST',
+        headers: {
+            'X-CSRF-Token': document.querySelector('meta[name="_csrf"]').content,
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.error) return;
+        btn.classList.toggle('following', data.following);
+        btn.querySelector('span').textContent = data.following ? '🔔 Following' : '🔕 Follow Thread';
+    });
+
 }
 </script>
 </body>
