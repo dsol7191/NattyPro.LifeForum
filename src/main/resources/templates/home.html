@@ -707,6 +707,34 @@
 
     </div>
 
+<!-- ── Pagination ── -->
+        <div th:if="${totalPages > 1}"
+             style="display:flex; justify-content:center; align-items:center; gap:8px; margin-top:24px; flex-wrap:wrap;">
+
+            <a th:if="${currentPage > 0}"
+               th:href="@{/(category=${selectedCategoryParam}, page=${currentPage - 1})}"
+               style="padding:8px 16px; background:var(--white); border:1px solid var(--border);
+                      border-radius:8px; text-decoration:none; color:var(--blue); font-weight:600;
+                      font-size:14px; box-shadow:var(--shadow);">← Prev</a>
+
+            <th:block th:each="i : ${#numbers.sequence(0, totalPages - 1)}">
+                <a th:href="@{/(category=${selectedCategoryParam}, page=${i})}"
+                   th:text="${i + 1}"
+                   th:style="${i == currentPage} ?
+                       'padding:8px 14px; background:var(--blue); color:white; border:1px solid var(--blue); border-radius:8px; text-decoration:none; font-weight:600; font-size:14px;' :
+                       'padding:8px 14px; background:var(--white); color:var(--text); border:1px solid var(--border); border-radius:8px; text-decoration:none; font-size:14px; box-shadow:var(--shadow);'">
+                </a>
+            </th:block>
+
+            <a th:if="${currentPage < totalPages - 1}"
+               th:href="@{/(category=${selectedCategoryParam}, page=${currentPage + 1})}"
+               style="padding:8px 16px; background:var(--white); border:1px solid var(--border);
+                      border-radius:8px; text-decoration:none; color:var(--blue); font-weight:600;
+                      font-size:14px; box-shadow:var(--shadow);">Next →</a>
+        </div>
+
+
+
     <!-- ── Sidebar ── -->
     <div class="sidebar">
         <div class="sidebar-card">
