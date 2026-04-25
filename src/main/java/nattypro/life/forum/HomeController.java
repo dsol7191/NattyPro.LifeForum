@@ -37,6 +37,8 @@
 	    private BannerRepository bannerRepo;
 	    @Autowired
 	    private YouTubeFeedService youtubeFeedService;
+	    @Autowired
+	    private CommentVoteRepository commentVoteRepo;
 	    
 	 // Define all categories in one place
 	    private static final List<String> CATEGORIES = Arrays.asList(
@@ -249,22 +251,25 @@
 	    	model.addAttribute("commentProStatus", commentProStatus);
 	        
 	        // Current user for profile links and PRO badge
-	        if (authentication != null) {
+	    	if (authentication != null) {
 	            User currentUser = userRepository.findByUsername(authentication.getName()).orElse(null);
 	            model.addAttribute("currentUser", currentUser);
-	            
-	        }
-	        if (authentication != null) {
-	            User currentUser = userRepository.findByUsername(authentication.getName()).orElse(null);
-	            model.addAttribute("currentUser", currentUser);
-	            
-	            // Add these:
+
 	            if (currentUser != null) {
 	                boolean isFollowing = followRepo.existsByUserAndPost(currentUser, post);
 	                boolean hasVoted = postVoteRepo.findByUserAndPost(currentUser, post).isPresent();
 	                model.addAttribute("isFollowing", isFollowing);
 	                model.addAttribute("hasVoted", hasVoted);
+
+	                // Comment voted map
+	                Map<Long, Boolean> commentVotedMap = comments.stream()
+	                    .collect(Collectors.toMap(
+	                        Comment::getId,
+	                        c -> commentVoteRepo.findByUserAndComment(currentUser, c).isPresent()
+	                    ));
+	                model.addAttribute("commentVotedMap", commentVotedMap);
 	            }
+	        
 	        } else {
 	            model.addAttribute("isFollowing", false);
 	            model.addAttribute("hasVoted", false);

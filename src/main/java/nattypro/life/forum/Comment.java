@@ -2,6 +2,11 @@ package nattypro.life.forum;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.OneToMany;
 
 @Entity
 public class Comment {
@@ -19,6 +24,14 @@ public class Comment {
     @Column(name = "post_id")
     private Long postId;
     
+    @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    private List<CommentVote> votes = new ArrayList<>();
+
+    public int getVoteCount() {
+        return votes == null ? 0 : votes.size();
+    }
+    
+   
     // Constructors
     public Comment() {
         this.createdAt = LocalDateTime.now();

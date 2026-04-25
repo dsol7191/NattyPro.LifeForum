@@ -19,6 +19,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 	    @Autowired private PostVoteRepository postVoteRepo;
 	    @Autowired private PostRepository postRepo;
 	    @Autowired private UserRepository userRepo;
+	    @Autowired private CommentVoteRepository commentVoteRepo;
+	    @Autowired private CommentRepository commentRepo;
 
 	    @PostMapping("/post/{postId}")
 	    @ResponseBody
@@ -50,6 +52,33 @@ import org.springframework.web.bind.annotation.ResponseBody;
 	        long newCount = postVoteRepo.countByPost(post);
 	        boolean voted = postVoteRepo.findByUserAndPost(user, post).isPresent();
 
+	        return ResponseEntity.ok(Map.of("voteCount", newCount, "voted", voted));
+	    }
+	    @PostMapping("/comment/{commentId}")
+	    @ResponseBody
+	    public ResponseEntity<?> toggleCommentVote(@PathVariable Long commentId, Principal principal) {
+	        if (principal == null) {
+	            return ResponseEntity.status(401).body(Map.of("error", "Login required"));
+	        }
+	        User user = userRepo.findByUsername(principal.getName()).orElseThrow();
+	        Comment comment = commentRepo.findById(commentId).orElseThrow();
+
+	        if (comment.getAuthor().equals(user.getUsername())) {
+	            return ResponseEntity.badRequest().body(Map.of("error", "Can't upvote your own comment"));
+	        }
+
+	        Optional<CommentVote> existing = commentVoteRepo.findByUserAndComment(user, comment);
+	        if (existing.isPresent()) {
+	            commentVoteRepo.delete(existing.get());
+	        } else {
+	            CommentVote vote = new CommentVote();
+	            vote.setUser(user);
+	            vote.setComment(comment);
+	            commentVoteRepo.save(vote);
+	        }
+
+	        long newCount = commentVoteRepo.countByComment(comment);
+	        boolean voted = commentVoteRepo.findByUserAndComment(user, comment).isPresent();
 	        return ResponseEntity.ok(Map.of("voteCount", newCount, "voted", voted));
 	    }
 	}

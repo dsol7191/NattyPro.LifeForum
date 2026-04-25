@@ -472,7 +472,7 @@
             No comments yet — be the first!
         </div>
 
-        <div th:each="comment : ${comments}" class="comment">
+      <div th:each="comment : ${comments}" class="comment">
             <div class="comment-header">
                 <a th:href="@{/profile/{username}(username=${comment.author})}"
                    class="author-link comment-author" th:text="${comment.author}">Author</a>
@@ -480,10 +480,25 @@
                 <span class="dot">•</span>
                 <span class="comment-time"
                       th:text="${#temporals.format(comment.createdAt, 'MMM dd, yyyy hh:mm a')}">Time</span>
+
+                <!-- Comment upvote -->
+                <span th:if="${currentUser != null and currentUser.username != comment.author}"
+                      style="margin-left:auto;">
+                    <button class="upvote-btn"
+                            th:classappend="${commentVotedMap != null and commentVotedMap[comment.id]} ? 'voted' : ''"
+                            th:data-comment-id="${comment.id}"
+                            onclick="toggleCommentVote(this)"
+                            style="padding:4px 10px; font-size:13px;">
+                        👍 <span class="vote-count" th:text="${comment.voteCount}">0</span>
+                    </button>
+                </span>
+                <span th:if="${currentUser == null}"
+                      style="margin-left:auto; font-size:13px; color:var(--text-muted);">
+                    👍 <span th:text="${comment.voteCount}">0</span>
+                </span>
             </div>
             <p class="comment-content" th:text="${comment.content}">Comment content</p>
         </div>
-
         <!-- Add Comment -->
         <div class="add-comment">
             <h3>Add a Comment</h3>
@@ -513,7 +528,22 @@ function toggleVote(btn) {
         btn.classList.toggle('voted', data.voted);
     });
 }
-
+function toggleCommentVote(btn) {
+    const commentId = btn.dataset.commentId;
+    fetch(`/vote/comment/${commentId}`, {
+        method: 'POST',
+        headers: {
+            'X-CSRF-Token': document.querySelector('meta[name="_csrf"]').content,
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.error) return;
+        btn.querySelector('.vote-count').textContent = data.voteCount;
+        btn.classList.toggle('voted', data.voted);
+    });
+}
 function toggleFollow(btn) {
     const postId = btn.dataset.postId;
     fetch(`/follow/post/${postId}`, {
