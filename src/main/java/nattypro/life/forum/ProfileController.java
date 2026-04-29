@@ -177,4 +177,55 @@ public class ProfileController {
         
         return "redirect:/profile/edit";
     }
+ // ── Delete (anonymize) own account ──
+    @PostMapping("/profile/delete")
+    public String deleteOwnAccount(@RequestParam String confirmUsername,
+                                   Authentication authentication,
+                                   jakarta.servlet.http.HttpServletRequest request) {
+        String currentUsername = authentication.getName();
+
+        // Must type their username to confirm
+        if (!confirmUsername.equals(currentUsername)) {
+            return "redirect:/profile/edit?deleteError=true";
+        }
+
+        User user = userRepository.findByUsername(currentUsername).orElseThrow();
+        userService.anonymizeUser(user.getId());
+
+        // Invalidate session immediately
+        try {
+            request.logout();
+        } catch (Exception e) {
+            System.err.println("Logout error: " + e.getMessage());
+        }
+
+        return "redirect:/login?accountDeleted=true";
+    }
+
+    // ── Change password while logged in ──
+    @PostMapping("/profile/change-password")
+    public String changePassword(@RequestParam String currentPassword,
+                                 @RequestParam String newPassword,
+                                 @RequestParam String confirmPassword,
+                                 Authentication authentication,
+                                 Model model) {
+        User user = userRepository.findByUsername(authentication.getName()).orElseThrow();
+
+        if (!passwordEncoder.matches(currentPassword, user.getPassword())) {
+            return "redirect:/profile/edit?passwordError=wrongCurrent";
+        }
+
+        if (!newPassword.equals(confirmPassword)) {
+            return "redirect:/profile/edit?passwordError=mismatch";
+        }
+
+        if (newPassword.length() < 8) {
+            return "redirect:/profile/edit?passwordError=tooShort";
+        }
+
+        user.setPassword(passwordEncoder.encode(newPassword));
+        userRepository.save(user);
+
+        return "redirect:/profile/edit?passwordChanged=true";
+    }
 }
