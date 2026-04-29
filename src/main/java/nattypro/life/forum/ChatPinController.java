@@ -17,6 +17,7 @@ public class ChatPinController {
 
     @Autowired private ChatInvitePinRepository pinRepository;
     @Autowired private UserRepository userRepository;
+    @Autowired private UserService userService;
 
     // ── PIN entry page ──
     @GetMapping("/chat/unlock")
@@ -95,5 +96,19 @@ public class ChatPinController {
         user.setVerifiedNattyPro(!Boolean.TRUE.equals(user.getVerifiedNattyPro()));
         userRepository.save(user);
         return "redirect:/admin/users";
+    }
+    @PostMapping("/admin/users/delete/{username}")
+    public String adminDeleteUser(@PathVariable String username, Authentication authentication) {
+        User admin = userRepository.findByUsername(authentication.getName()).orElseThrow();
+        if (!admin.getRole().equals("ADMIN")) return "redirect:/";
+
+        // Prevent admin from deleting themselvesO
+        if (username.equals(authentication.getName())) {
+            return "redirect:/admin/users?error=cannotDeleteSelf";
+        }
+
+        User user = userRepository.findByUsername(username).orElseThrow();
+        userService.anonymizeUser(user.getId());
+        return "redirect:/admin/users?deleted=true";
     }
 }

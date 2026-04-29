@@ -31,6 +31,11 @@ public class ProfileController {
     private PostVoteRepository postVoteRepo;
     @Autowired
     private ThreadFollowRepository followRepo;
+    @Autowired
+    private UserService userService;
+    @Autowired
+    private org.springframework.security.crypto.password.PasswordEncoder passwordEncoder;
+    
     
     // Directory for avatar uploads
     private final String UPLOAD_DIR = "uploads/avatars/";

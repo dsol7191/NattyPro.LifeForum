@@ -3,6 +3,8 @@ package nattypro.life.forum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import java.util.UUID;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Service
 public class UserService {
@@ -38,5 +40,23 @@ public class UserService {
     
     public User findByUsername(String username) {
         return userRepository.findByUsername(username).orElse(null);
+    }
+    public void anonymizeUser(Long userId) {
+        User user = userRepository.findById(userId).orElseThrow();
+        user.setUsername("DeletedUser_" + userId);
+        user.setEmail("deleted_" + userId + "@nattypro.life");
+        user.setPassword(passwordEncoder.encode(UUID.randomUUID().toString()));
+        user.setBio(null);
+        user.setAvatarUrl("/images/default-avatar.png");
+        user.setInstagramHandle(null);
+        user.setTwitterHandle(null);
+        user.setYoutubeHandle(null);
+        user.setTwitchHandle(null);
+        user.setResetToken(null);
+        user.setResetTokenExpiry(null);
+        user.setConfirmationToken(null);
+        user.setEmailConfirmed(false);
+        user.setChatAccess(false);
+        userRepository.save(user);
     }
 }
