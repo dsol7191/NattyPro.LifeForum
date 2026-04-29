@@ -101,13 +101,17 @@ public class AuthController {
         String email    = (String) session.getAttribute("reg_email");
 
         try {
-            userService.registerUser(username, password, email);
-            userService.setAcceptedRules(username);
+            User newUser = userService.registerUser(username, password, email);
+            newUser.setAcceptedRules(true);
+            userRepository.save(newUser);
         } catch (Exception e) {
+            System.err.println("Registration failed: " + e.getMessage());
+            // Clean up any partially created user
+            userRepository.findByUsername(username).ifPresent(userRepository::delete);
             model.addAttribute("error", "Something went wrong. Please try again.");
             return "register-rules";
         }
-
+        
         // Clear session
         session.removeAttribute("reg_username");
         session.removeAttribute("reg_password");
