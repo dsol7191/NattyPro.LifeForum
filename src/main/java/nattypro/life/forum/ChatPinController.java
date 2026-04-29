@@ -82,7 +82,9 @@ public class ChatPinController {
         if (!user.getRole().equals("ADMIN")) {
             return "redirect:/";
         }
-        model.addAttribute("users", userRepository.findAll());
+        model.addAttribute("users", userRepository.findAll().stream()
+        	    .filter(u -> !u.getUsername().startsWith("DeletedUser_"))
+        	    .collect(java.util.stream.Collectors.toList()));
         return "admin-users";
     }
 

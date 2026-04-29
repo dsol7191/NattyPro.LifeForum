@@ -281,14 +281,15 @@
 	    @GetMapping("/search")
 	    public String search(@RequestParam String query, Model model, Authentication authentication) {
 	        
-	        List<Post> results = postRepository.findAll().stream()
-	            .filter(p -> 
-	                p.getTitle().toLowerCase().contains(query.toLowerCase()) ||
-	                p.getContent().toLowerCase().contains(query.toLowerCase()) ||
-	                p.getAuthor().toLowerCase().contains(query.toLowerCase())
-	            )
-	            .sorted((a, b) -> b.getCreatedAt().compareTo(a.getCreatedAt()))
-	            .collect(Collectors.toList());
+	    	List<Post> results = postRepository.findAll().stream()
+	    		    .filter(p -> 
+	    		        p.getTitle().toLowerCase().contains(query.toLowerCase()) ||
+	    		        p.getContent().toLowerCase().contains(query.toLowerCase()) ||
+	    		        (p.getAuthor().toLowerCase().contains(query.toLowerCase()) 
+	    		            && !p.getAuthor().startsWith("DeletedUser_"))
+	    		    )
+	    		    .sorted((a, b) -> b.getCreatedAt().compareTo(a.getCreatedAt()))
+	    		    .collect(Collectors.toList());
 	        Map<String, Object> proStatusMap = results.stream()
 	        	    .collect(Collectors.toMap(
 	        	        Post::getAuthor,
