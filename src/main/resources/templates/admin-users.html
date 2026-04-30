@@ -229,4 +229,9 @@
 <script>
 function filterUsers() {
     const query = document.getElementById('searchBox').value.toLowerCase();
-    document.querySelectorAll(
+    document.querySelectorAll('.user-row').forEach(row => {
+        const username = row.getAttribute('data-username').toLowerCase();
+        row.style.display = username.includes(query) ? '' : 'none';
+    });
+}
+</script>
