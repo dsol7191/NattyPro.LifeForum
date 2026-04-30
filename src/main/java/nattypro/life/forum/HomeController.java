@@ -17,6 +17,7 @@
 	import org.springframework.data.domain.Page;
 	import org.springframework.data.domain.PageRequest;
 	import org.springframework.data.domain.Sort;
+	import org.springframework.web.multipart.MultipartFile;
 	
 	@Controller
 	public class HomeController {
@@ -39,6 +40,8 @@
 	    private YouTubeFeedService youtubeFeedService;
 	    @Autowired
 	    private CommentVoteRepository commentVoteRepo;
+	    @Autowired
+	    private S3Service s3Service;
 	    
 	 // Define all categories in one place
 	    private static final List<String> CATEGORIES = Arrays.asList(
@@ -155,13 +158,40 @@
 	    }
 	    
 	    @PostMapping("/create")
-	    public String createPost(Post post, Authentication authentication) {
-	        // Automatically set author to logged-in username
+	    public String createPost(Post post,
+	                             @RequestParam(required = false) List<MultipartFile> images,
+	                             Authentication authentication) {
 	        post.setAuthor(authentication.getName());
+
+	        if (images != null) {
+	            List<String> imageUrls = new ArrayList<>();
+	            int count = 0;
+	            for (MultipartFile image : images) {
+	                if (count >= 5) break;
+	                if (image != null && !image.isEmpty()) {
+	                    String contentType = image.getContentType();
+	                    if (contentType != null && (contentType.equals("image/jpeg") ||
+	                            contentType.equals("image/png") ||
+	                            contentType.equals("image/gif"))) {
+	                        if (image.getSize() <= 5 * 1024 * 1024) {
+	                            try {
+	                                String url = s3Service.uploadFile(image);
+	                                imageUrls.add(url);
+	                                count++;
+	                            } catch (Exception e) {
+	                                System.err.println("Image upload failed: " + e.getMessage());
+	                            }
+	                        }
+	                    }
+	                }
+	            }
+	            post.setImageUrls(imageUrls);
+	        }
+
 	        postRepository.save(post);
 	        return "redirect:/";
-	        
 	    }
+	    
 	    @PostMapping("/delete/{id}")
 	    public String deletePost(@PathVariable Long id, Authentication authentication) {
 	        Post post = postRepository.findById(id).orElse(null);
@@ -172,6 +202,16 @@
 	                .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
 	            
 	            if (post.getAuthor().equals(currentUser) || isAdmin) {
+	                // Delete S3 images
+	                if (post.getImageUrls() != null) {
+	                    for (String url : post.getImageUrls()) {
+	                        try {
+	                            s3Service.deleteFile(url);
+	                        } catch (Exception e) {
+	                            System.err.println("Failed to delete image: " + e.getMessage());
+	                        }
+	                    }
+	                }
 	                followRepo.deleteByPost(post);
 	                postRepository.delete(post);
 	            }

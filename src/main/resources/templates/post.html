@@ -443,6 +443,17 @@
 
             <h1 class="post-title" th:text="${post.title}">Post Title</h1>
             <p class="post-content" th:text="${post.content}">Post content</p>
+            
+            <div th:if="${post.imageUrls != null and !#lists.isEmpty(post.imageUrls)}"
+     style="display:flex; flex-wrap:wrap; gap:10px; margin-bottom:20px;">
+    <a th:each="img : ${post.imageUrls}"
+       th:href="${img}" target="_blank">
+        <img th:src="${img}"
+             style="max-width:200px; max-height:200px; object-fit:cover;
+                    border-radius:8px; border:1px solid var(--border);
+                    cursor:pointer;"/>
+    </a>
+</div>
 
             <div class="post-meta">
                 <span>Posted by</span>
