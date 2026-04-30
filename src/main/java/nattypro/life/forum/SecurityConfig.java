@@ -70,8 +70,7 @@ public class SecurityConfig {
             )
             .headers(headers -> headers
             		.contentSecurityPolicy(csp -> csp
-            			    .policyDirectives("default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' fonts.googleapis.com cdnjs.cloudflare.com; font-src fonts.gstatic.com cdnjs.cloudflare.com; img-src 'self' i.ytimg.com data:; frame-src www.youtube.com")
-            			)
+            				.policyDirectives("default-src 'self'; script-src 'self' 'unsafe-inline' static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' fonts.googleapis.com cdnjs.cloudflare.com; font-src fonts.gstatic.com cdnjs.cloudflare.com; img-src 'self' i.ytimg.com data: nattypro-images.s3.us-east-2.amazonaws.com; frame-src www.youtube.com")            			)
             	    .frameOptions(frame -> frame.sameOrigin()
             	)
           
