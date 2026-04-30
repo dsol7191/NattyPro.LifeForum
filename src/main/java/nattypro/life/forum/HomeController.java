@@ -171,9 +171,8 @@
 	            boolean isAdmin = authentication.getAuthorities().stream()
 	                .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
 	            
-	            // Allow deletion if user is the author OR an admin
-	            
 	            if (post.getAuthor().equals(currentUser) || isAdmin) {
+	                followRepo.deleteByPost(post);
 	                postRepository.delete(post);
 	            }
 	        }
