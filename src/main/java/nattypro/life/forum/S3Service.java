@@ -49,8 +49,7 @@ public class S3Service {
 
         getClient().putObject(request, RequestBody.fromBytes(file.getBytes()));
 
-        return "https://" + bucketName + ".s3." + region + ".amazonaws.com/" + key;
-    }
+        return "https://images.nattypro.life/" + key;    }
 
     public void deleteFile(String fileUrl) {
         if (fileUrl == null || fileUrl.isEmpty()) return;
