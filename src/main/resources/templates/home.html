@@ -115,9 +115,15 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            pointer-events: none;
+            
         }
 
-        .banner-slide.active { opacity: 1; }
+        .banner-slide.active { 
+        	opacity: 1;
+        	pointer-events: auto;
+        	
+         }
 
         .banner-youtube {
             width: 100%;

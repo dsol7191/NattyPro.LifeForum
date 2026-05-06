@@ -1,5 +1,6 @@
 package nattypro.life.forum;
 
+import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -16,20 +17,22 @@ public class YouTubeFeedService {
 
     private final RestTemplate restTemplate = new RestTemplate();
 
-    // Cache: channelId -> latest video info
     private final Map<String, Map<String, String>> videoCache = new ConcurrentHashMap<>();
 
-    // Featured channels — add channel IDs here
     private static final List<String> FEATURED_CHANNELS = Arrays.asList(
-    	    "UCDjSFOeyQ91aJoxTRqjaNWw",  // Longevity Muscle
-    	    "UC8fhb7upVSZ0q-zK5snR9BA",  // 3DMJ
-    	    "UC0SBUBfztKPNFI1hfS1668w",  // D.Sol Coaching
-    	    "UCfm7KCNQMOq92nRbYs-0_FQ",  // Natty News Daily
-    	    "UC6wB_e6YQncYgpv_QrMGHCQ",  // Revive Stronger
-    	    "UCEGGAs257niPVJ5BvXymVLQ"   // Iron Culture
-    	);
+        "UCDjSFOeyQ91aJoxTRqjaNWw",  // Longevity Muscle
+        "UC8fhb7upVSZ0q-zK5snR9BA",  // 3DMJ
+        "UC0SBUBfztKPNFI1hfS1668w",  // D.Sol Coaching
+        "UCfm7KCNQMOq92nRbYs-0_FQ",  // Natty News Daily
+        "UC6wB_e6YQncYgpv_QrMGHCQ",  // Revive Stronger
+        "UCEGGAs257niPVJ5BvXymVLQ"   // Iron Culture
+    );
 
-    // Fetch latest video for all channels every 6 hours
+    @PostConstruct
+    public void initializeCache() {
+        refreshFeeds();
+    }
+
     @Scheduled(fixedRate = 21600000)
     public void refreshFeeds() {
         for (String channelId : FEATURED_CHANNELS) {
@@ -53,7 +56,6 @@ public class YouTubeFeedService {
         try {
             @SuppressWarnings("unchecked")
             Map<String, Object> response = restTemplate.getForObject(url, Map.class);
-            System.out.println("YouTube API response for " + channelId + ": " + response);
 
             if (response != null && response.containsKey("items")) {
                 @SuppressWarnings("unchecked")
@@ -68,6 +70,14 @@ public class YouTubeFeedService {
                     @SuppressWarnings("unchecked")
                     Map<String, Object> snippet = (Map<String, Object>) item.get("snippet");
 
+                    String videoId = (String) id.get("videoId");
+
+                    // Guard: skip if videoId is missing (shouldn't happen with type=video, but just in case)
+                    if (videoId == null || videoId.isBlank()) {
+                        System.err.println("No videoId returned for channel: " + channelId + " — skipping. Full id object: " + id);
+                        return;
+                    }
+
                     @SuppressWarnings("unchecked")
                     Map<String, Object> thumbnails = (Map<String, Object>) snippet.get("thumbnails");
 
@@ -75,23 +85,23 @@ public class YouTubeFeedService {
                     Map<String, Object> highThumbnail = (Map<String, Object>) thumbnails.getOrDefault("maxres", thumbnails.get("high"));
 
                     Map<String, String> videoInfo = new HashMap<>();
-                    videoInfo.put("videoId", (String) id.get("videoId"));
+                    videoInfo.put("videoId", videoId);
                     videoInfo.put("title", (String) snippet.get("title"));
                     videoInfo.put("channelTitle", (String) snippet.get("channelTitle"));
                     videoInfo.put("thumbnail", (String) highThumbnail.get("url"));
                     videoInfo.put("channelId", channelId);
 
                     videoCache.put(channelId, videoInfo);
+                    System.out.println("Cached video for " + channelId + ": videoId=" + videoId + " title=" + snippet.get("title"));
+                } else {
+                    System.err.println("No videos returned for channel: " + channelId);
                 }
+            } else {
+                System.err.println("Unexpected API response for channel " + channelId + ": " + response);
             }
         } catch (Exception e) {
             System.err.println("YouTube API error for channel " + channelId + ": " + e.getMessage());
         }
-    }
-
-    // Called on startup to populate cache immediately
-    public void initializeCache() {
-        refreshFeeds();
     }
 
     public List<Map<String, String>> getLatestVideos() {
