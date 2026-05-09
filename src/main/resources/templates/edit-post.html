@@ -92,7 +92,7 @@
                         </option>
                     </select>
                 </div>
-                <textarea name="content" placeholder="Post content..." required th:text="${post.content}"></textarea>
+<textarea id="content" name="content" placeholder="Post content..." required th:text="${post.content}"></textarea>
                 <div class="btn-row">
                     <button type="submit" class="submit-btn">Save Changes</button>
                     <a th:href="@{/post/{id}(id=${post.id})}" class="cancel-link">Cancel</a>
@@ -101,6 +101,21 @@
         </div>
     </div>
 </div>
-
+<script src="https://cdn.jsdelivr.net/npm/tinymce@6/tinymce.min.js"></script>
+<script>
+    tinymce.init({
+        selector: '#content',
+        menubar: false,
+        height: 360,
+        plugins: 'lists link',
+        toolbar: 'bold italic underline | bullist numlist | link | removeformat',
+        content_style: "body { font-family: 'DM Sans', sans-serif; font-size: 14px; color: #1a1a2e; line-height: 1.6; }",
+        setup: function(editor) {
+            editor.on('change', function() {
+                editor.save();
+            });
+        }
+    });
+</script>
 </body>
 </html>

@@ -694,7 +694,7 @@
                 <span class="category-badge" th:text="${post.category}">Category</span>
             </div>
             <a th:href="@{/post/{id}(id=${post.id})}" class="post-title-link" th:text="${post.title}">Post Title</a>
-            <p class="post-excerpt" th:text="${post.content}">Content preview...</p>
+            <p class="post-excerpt" th:utext="${post.content}">Content preview...</p>
             <div class="post-footer">
                 <div class="post-footer-left">
                     <span>By</span>
@@ -888,7 +888,24 @@
 	}
 
 	if (slides.length > 1) bannerTimer = setInterval(nextSlide, 6000);
+	
+	
 </script>
-
+<script src="https://cdn.jsdelivr.net/npm/tinymce@6/tinymce.min.js"></script>
+<script>
+    tinymce.init({
+        selector: '#content',
+        menubar: false,
+        height: 260,
+        plugins: 'lists link',
+        toolbar: 'bold italic underline | bullist numlist | link | removeformat',
+        content_style: "body { font-family: 'DM Sans', sans-serif; font-size: 14px; color: #1a1a2e; line-height: 1.6; }",
+        setup: function(editor) {
+            editor.on('change', function() {
+                editor.save();
+            });
+        }
+    });
+</script>
 </body>
 </html>

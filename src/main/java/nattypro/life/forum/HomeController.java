@@ -19,6 +19,8 @@
 	import org.springframework.data.domain.Sort;
 	import org.springframework.web.multipart.MultipartFile;
 	import java.util.ArrayList;
+	import org.jsoup.Jsoup;
+	import org.jsoup.safety.Safelist;
 	
 	@Controller
 	public class HomeController {
@@ -189,6 +191,7 @@
 	            post.setImageUrls(imageUrls);
 	        }
 
+	        post.setContent(Jsoup.clean(post.getContent(), Safelist.relaxed()));
 	        postRepository.save(post);
 	        return "redirect:/";
 	    }
@@ -254,7 +257,7 @@
 	        }
 
 	        post.setTitle(title);
-	        post.setContent(content);
+	        post.setContent(Jsoup.clean(content, Safelist.relaxed()));
 	        post.setCategory(category);
 	        postRepository.save(post);
 

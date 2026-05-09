@@ -68,13 +68,18 @@ public class SecurityConfig {
             .csrf(csrf -> csrf
                 .ignoringRequestMatchers("/h2-console/**", "/ws/**")
             )
-            .headers(headers -> headers
-            		.contentSecurityPolicy(csp -> csp
-            				.policyDirectives("default-src 'self'; script-src 'self' 'unsafe-inline' static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' fonts.googleapis.com cdnjs.cloudflare.com; font-src fonts.gstatic.com cdnjs.cloudflare.com; img-src 'self' i.ytimg.com data: nattypro-images.s3.us-east-2.amazonaws.com; frame-src www.youtube.com")            			)
-            	    .frameOptions(frame -> frame.sameOrigin()
-            	)
-          
-            );
+            .headers(headers -> {
+                headers.contentSecurityPolicy(csp -> csp
+                        .policyDirectives("default-src 'self'; " +
+                            "script-src 'self' 'unsafe-inline' static.cloudflareinsights.com cdn.jsdelivr.net blob:; " +
+                            "style-src 'self' 'unsafe-inline' fonts.googleapis.com cdnjs.cloudflare.com cdn.jsdelivr.net; " +
+                            "font-src fonts.gstatic.com cdnjs.cloudflare.com cdn.jsdelivr.net; " +
+                            "img-src 'self' i.ytimg.com data: blob: nattypro-images.s3.us-east-2.amazonaws.com cdn.jsdelivr.net; " +
+                            "frame-src https://www.youtube.com; " +
+                            "connect-src 'self'")
+                    );
+                    headers.frameOptions(frame -> frame.sameOrigin());
+                });
 
         return http.build();
     }}
