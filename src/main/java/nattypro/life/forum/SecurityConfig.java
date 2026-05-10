@@ -76,7 +76,7 @@ public class SecurityConfig {
                             "font-src fonts.gstatic.com cdnjs.cloudflare.com cdn.jsdelivr.net; " +
                             "img-src 'self' i.ytimg.com data: blob: nattypro-images.s3.us-east-2.amazonaws.com cdn.jsdelivr.net; " +
                             "frame-src https://www.youtube.com; " +
-                            "connect-src 'self'")
+                            "connect-src 'self' https://www.youtube.com")
                     );
                     headers.frameOptions(frame -> frame.sameOrigin());
                 });
