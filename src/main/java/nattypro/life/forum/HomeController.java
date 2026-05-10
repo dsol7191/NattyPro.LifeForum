@@ -191,8 +191,15 @@
 	            post.setImageUrls(imageUrls);
 	        }
 
-	        post.setContent(Jsoup.clean(post.getContent(), Safelist.relaxed()));
-	        postRepository.save(post);
+	        Safelist safelist = Safelist.relaxed()
+	        	    .addTags("iframe")
+	        	    .addAttributes("iframe", "src", "width", "height", "frameborder",
+	        	                   "allowfullscreen", "allow", "style")
+	        	    .addProtocols("iframe", "src", "https");
+
+	        	post.setContent(Jsoup.clean(post.getContent(), safelist));
+	        	postRepository.save(post);
+	        
 	        return "redirect:/";
 	    }
 	    
@@ -257,9 +264,15 @@
 	        }
 
 	        post.setTitle(title);
-	        post.setContent(Jsoup.clean(content, Safelist.relaxed()));
-	        post.setCategory(category);
-	        postRepository.save(post);
+	        
+	        Safelist safelist = Safelist.relaxed()
+	        	    .addTags("iframe")
+	        	    .addAttributes("iframe", "src", "width", "height", "frameborder",
+	        	                   "allowfullscreen", "allow", "style")
+	        	    .addProtocols("iframe", "src", "https");
+
+	        	post.setContent(Jsoup.clean(post.getContent(), safelist));
+	        	postRepository.save(post);
 
 	        return "redirect:/post/" + id;
 	    }
