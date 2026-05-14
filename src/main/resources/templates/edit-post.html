@@ -112,21 +112,18 @@ tinymce.init({
     link_default_target: '_blank',
     link_assume_external_targets: true,
     media_live_embeds: true,
-    content_style: "body { font-family: 'DM Sans', sans-serif; font-size: 14px; color: #1a1a2e; line-height: 1.6; }",
-    setup: function(editor) {
-        editor.on('change', function() {
-            editor.save();
-        });
-        editor.on('submit', function() {
-            editor.save();
-        });
-    }
+    content_style: "body { font-family: 'DM Sans', sans-serif; font-size: 14px; color: #1a1a2e; line-height: 1.6; }"
 });
+    
 
-document.querySelector('form').addEventListener('submit', function(e) {
+
+document.querySelector('.submit-btn').addEventListener('click', function(e) {
     e.preventDefault();
-    tinymce.triggerSave();
-    setTimeout(() => this.submit(), 100);
+    const editor = tinymce.get('content');
+    if (editor) {
+        document.querySelector('#content').value = editor.getContent();
+    }
+    document.querySelector('form').submit();
 });
 </script>
 </body>
