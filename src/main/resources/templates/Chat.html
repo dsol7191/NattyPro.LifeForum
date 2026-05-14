@@ -342,8 +342,8 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
 
 <script th:inline="javascript">
-    const room = [[${room}]];
-    const username = [[${username}]];
+    const room = [[$,{room}]];
+    const username = [[$,{username}]];
     let stompClient = null;
 
     function connect() {
