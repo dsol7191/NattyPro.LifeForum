@@ -289,57 +289,52 @@
 	    @GetMapping("/post/{id}")
 	    public String viewPost(@PathVariable Long id, Model model, Authentication authentication) {
 	        Post post = postRepository.findById(id).orElse(null);
-	
 	        if (post == null) {
 	            return "redirect:/";
 	        }
-	
+
 	        List<Comment> comments = commentRepository.findByPostIdOrderByCreatedAtAsc(id);
-	
 	        model.addAttribute("post", post);
 	        model.addAttribute("comments", comments);
 	        model.addAttribute("newComment", new Comment());
+
 	        User postAuthor = userRepository.findByUsername(post.getAuthor()).orElse(null);
-	    	boolean postAuthorPro = postAuthor != null && Boolean.TRUE.equals(postAuthor.getVerifiedNattyPro());
-	    	model.addAttribute("postAuthorPro", postAuthorPro);
-	
-	    	// PRO status map for comment authors
-	    	Map<String, Object> commentProStatus = comments.stream()
-	    	    .collect(Collectors.toMap(
-	    	        Comment::getAuthor,
-	    	        c -> {
-	    	            User u = userRepository.findByUsername(c.getAuthor()).orElse(null);
-	    	            return u != null && Boolean.TRUE.equals(u.getVerifiedNattyPro());
-	    	        },
-	    	        (a, b) -> a
-	    	    ));
-	    	model.addAttribute("commentProStatus", commentProStatus);
-	        
-	        // Current user for profile links and PRO badge
-	    	if (authentication != null) {
-	            User currentUser = userRepository.findByUsername(authentication.getName()).orElse(null);
-	            model.addAttribute("currentUser", currentUser);
+	        boolean postAuthorPro = postAuthor != null && Boolean.TRUE.equals(postAuthor.getVerifiedNattyPro());
+	        model.addAttribute("postAuthorPro", postAuthorPro);
 
-	            if (currentUser != null) {
-	                boolean isFollowing = followRepo.existsByUserAndPost(currentUser, post);
-	                boolean hasVoted = postVoteRepo.findByUserAndPost(currentUser, post).isPresent();
-	                model.addAttribute("isFollowing", isFollowing);
-	                model.addAttribute("hasVoted", hasVoted);
+	        Map<String, Object> commentProStatus = comments.stream()
+	            .collect(Collectors.toMap(
+	                Comment::getAuthor,
+	                c -> {
+	                    User u = userRepository.findByUsername(c.getAuthor()).orElse(null);
+	                    return u != null && Boolean.TRUE.equals(u.getVerifiedNattyPro());
+	                },
+	                (a, b) -> a
+	            ));
+	        model.addAttribute("commentProStatus", commentProStatus);
 
-	                // Comment voted map
-	                Map<Long, Boolean> commentVotedMap = comments.stream()
-	                    .collect(Collectors.toMap(
-	                        Comment::getId,
-	                        c -> commentVoteRepo.findByUserAndComment(currentUser, c).isPresent()
-	                    ));
-	                model.addAttribute("commentVotedMap", commentVotedMap);
-	            }
-	        
-	        } else {
-	            model.addAttribute("isFollowing", false);
-	            model.addAttribute("hasVoted", false);
+	        // Guest-safe defaults — set unconditionally so the template never hits a null.
+	        model.addAttribute("isFollowing", false);
+	        model.addAttribute("hasVoted", false);
+	        model.addAttribute("commentVotedMap", Map.of());
+
+	        User currentUser = (authentication != null)
+	            ? userRepository.findByUsername(authentication.getName()).orElse(null)
+	            : null;
+	        model.addAttribute("currentUser", currentUser);
+
+	        // currentUser is null for a guest (no "anonymousUser" row) — this block is the real gate.
+	        if (currentUser != null) {
+	            model.addAttribute("isFollowing", followRepo.existsByUserAndPost(currentUser, post));
+	            model.addAttribute("hasVoted", postVoteRepo.findByUserAndPost(currentUser, post).isPresent());
+	            Map<Long, Boolean> commentVotedMap = comments.stream()
+	                .collect(Collectors.toMap(
+	                    Comment::getId,
+	                    c -> commentVoteRepo.findByUserAndComment(currentUser, c).isPresent()
+	                ));
+	            model.addAttribute("commentVotedMap", commentVotedMap);
 	        }
-	        
+
 	        return "post";
 	    }
 	    
