@@ -217,13 +217,21 @@
         }
 
         .post-content {
-          
-            line-height: 1.7;
-            font-size: 15px;
-            color: var(--text);
-            word-wrap: break-word;
-            margin: 0 0 24px;
-        }
+    line-height: 1.7;
+    font-size: 15px;
+    color: var(--text);
+    word-wrap: break-word;
+    margin: 0 0 24px;
+}
+
+/* ← add these two new rules right here */
+.post-content p {
+    margin: 0 0 12px;
+}
+
+.post-content p:last-child {
+    margin-bottom: 0;
+}
 
         .post-meta {
             display: flex;
