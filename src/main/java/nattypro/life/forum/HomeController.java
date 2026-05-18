@@ -254,6 +254,9 @@
 	                                 @RequestParam String content,
 	                                 @RequestParam String category,
 	                                 Authentication authentication) {
+
+	        System.out.println("EDIT SUBMIT - content received: " + content); // ← add this
+
 	        Post post = postRepository.findById(id).orElse(null);
 	        if (post == null) return "redirect:/";
 
