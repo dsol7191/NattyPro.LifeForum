@@ -1,6 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-	
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <script>
 function escapeHtml(s) {
     return s.replace(/&/g, '&amp;')
@@ -502,7 +502,26 @@ window.onload = function() {
             </div>
             <p class="comment-content" th:text="${comment.content}">Comment content</p>
         </div>
-        <!-- Add Comment -->
+        <!-- Add Comment - members only -->
+<div class="add-comment" sec:authorize="isAuthenticated()">
+    <h3>Add a Comment</h3>
+    <form th:action="@{/post/{id}/comment(id=${post.id})}" th:object="${newComment}" method="post">
+        <textarea th:field="*{content}" placeholder="Write your comment..." required></textarea>
+        <button type="submit" class="submit-btn">Post Comment</button>
+    </form>
+</div>
+
+<!-- Guest CTA -->
+<div class="add-comment" sec:authorize="isAnonymous()" style="text-align:center;">
+    <h3>Join the Discussion</h3>
+    <p style="font-size:14px; color:var(--text-muted); line-height:1.6; margin:0 0 14px;">
+        Want to reply to this thread? Create a free account to post comments,
+        upvote, and follow the conversation.
+    </p>
+    <a href="/join" class="submit-btn" style="text-decoration:none; display:inline-block;">
+        Join NattyPro.Life →
+    </a>
+</div><!-- Add Comment -->
         <div class="add-comment">
             <h3>Add a Comment</h3>
             <form th:action="@{/post/{id}/comment(id=${post.id})}" th:object="${newComment}" method="post">
