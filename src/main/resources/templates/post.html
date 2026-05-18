@@ -1,46 +1,30 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 	
-	</head>
 <script>
-	function linkify(text) {
-	    const urlRegex = /(https?:\/\/[^\s]+)/g;
-	    return text.replace(urlRegex, '<a href="$1" target="_blank" style="color: #007bff; word-break: break-all;">$1</a>');
-	}
+function escapeHtml(s) {
+    return s.replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#39;');
+}
 
-	function embedify(text) {
-	    // YouTube embeds
-	    const youtubeRegex = /https?:\/\/(?:www\.)?(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/g;
-	    text = text.replace(youtubeRegex, function(match, videoId) {
-	        return '<div style="position: relative; padding-bottom: 56.25%; height: 0; margin: 15px 0;"><iframe style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;" src="https://www.youtube.com/embed/' + videoId + '" frameborder="0" allowfullscreen></iframe></div>';
-	    });
-	    
-	    // Twitter embeds
-	    const twitterRegex = /https?:\/\/(?:www\.)?(?:twitter\.com|x\.com)\/\w+\/status\/(\d+)/g;
-	    text = text.replace(twitterRegex, '<a href="$&" target="_blank" style="color: #007bff;">$&</a>');
-	    
-	    return text;
-	}
+function linkify(text) {
+    const urlRegex = /(https?:\/\/[^\s]+)/g;
+    return text.replace(urlRegex,
+        '<a href="$1" target="_blank" rel="noopener noreferrer" ' +
+        'style="color:#007bff; word-break:break-all;">$1</a>');
+}
 
-	window.onload = function() {
-	    // Linkify and embed post content
-	    const postContent = document.querySelector('.post-content');
-	    if (postContent) {
-	        let content = postContent.textContent;
-	        content = embedify(content);
-	        content = linkify(content);
-	        postContent.innerHTML = content;
-	    }
-	    
-	    // Linkify and embed comments
-	    document.querySelectorAll('.comment-content').forEach(function(element) {
-	        let content = element.textContent;
-	        content = embedify(content);
-	        content = linkify(content);
-	        element.innerHTML = content;
-	    });
-	};
-	</script>
+// Post content is rich HTML from the editor — rendered as-is, no JS processing.
+// Comments are plain text: escape first (blocks HTML injection), then linkify URLs.
+window.onload = function() {
+    document.querySelectorAll('.comment-content').forEach(function(el) {
+        el.innerHTML = linkify(escapeHtml(el.textContent));
+    });
+};
+</script>
 
 
 <head>
