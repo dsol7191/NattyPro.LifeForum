@@ -270,20 +270,18 @@
 	        }
 
 	        post.setTitle(title);
-	        
-	        Safelist safelist = Safelist.relaxed()
-	        	    .addTags("iframe")
-	        	    .addAttributes("iframe", "src", "width", "height", "frameborder",
-	        	                   "allowfullscreen", "allow", "style")
-	        	    .addProtocols("iframe", "src", "https");
+	        post.setCategory(category);
 
-	        	post.setContent(Jsoup.clean(post.getContent(), safelist));
-	        	post.setTitle(title);
-	        	post.setContent(Jsoup.clean(content, safelist));
-	        	System.out.println("AFTER JSOUP - content length: " + post.getContent().length()); // ← add this
-	        	post.setCategory(category);
-	        	postRepository.save(post);
-	        	postRepository.save(post);
+	        Safelist safelist = Safelist.relaxed()
+	            .addTags("iframe")
+	            .addAttributes("iframe", "src", "width", "height", "frameborder",
+	                           "allowfullscreen", "allow", "style")
+	            .addProtocols("iframe", "src", "https");
+
+	        post.setContent(Jsoup.clean(content, safelist));
+	        System.out.println("AFTER JSOUP - content length: " + post.getContent().length());
+
+	        postRepository.save(post);
 
 	        return "redirect:/post/" + id;
 	    }
