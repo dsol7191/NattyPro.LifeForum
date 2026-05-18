@@ -256,8 +256,11 @@
 	                                 Authentication authentication) {
 
 	        System.out.println("EDIT SUBMIT - content received: " + content); // ← add this
+	        
+	        
 
 	        Post post = postRepository.findById(id).orElse(null);
+	        
 	        if (post == null) return "redirect:/";
 
 	        boolean isAdmin = authentication.getAuthorities().stream()
@@ -275,6 +278,11 @@
 	        	    .addProtocols("iframe", "src", "https");
 
 	        	post.setContent(Jsoup.clean(post.getContent(), safelist));
+	        	post.setTitle(title);
+	        	post.setContent(Jsoup.clean(content, safelist));
+	        	System.out.println("AFTER JSOUP - content length: " + post.getContent().length()); // ← add this
+	        	post.setCategory(category);
+	        	postRepository.save(post);
 	        	postRepository.save(post);
 
 	        return "redirect:/post/" + id;
